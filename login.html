@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login | Cyprus College Group</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--primary:#1a3a6b;--gold:#c9a227;--danger:#e74c3c;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inter',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(135deg,#0a1838 0%,#1a3a6b 60%,#0f2347 100%);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;overflow:hidden;
+    }
+    .bg-circles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+    .circle{position:absolute;border-radius:50%;background:rgba(201,162,39,.05);}
+    .circle-1{width:600px;height:600px;top:-200px;right:-200px;}
+    .circle-2{width:400px;height:400px;bottom:-100px;left:-100px;background:rgba(42,82,152,.1);}
+    .circle-3{width:200px;height:200px;top:50%;left:20%;}
+    .login-wrapper{
+      display:flex;max-width:960px;width:100%;margin:20px;
+      border-radius:24px;overflow:hidden;
+      box-shadow:0 40px 80px rgba(0,0,0,.5);
+      position:relative;z-index:1;
+    }
+    /* Left Panel */
+    .login-left{
+      flex:1;background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-right:none;
+      padding:60px 48px;color:#fff;
+      display:flex;flex-direction:column;justify-content:space-between;
+      backdrop-filter:blur(20px);
+    }
+    .login-logo{display:flex;align-items:center;gap:14px;margin-bottom:48px;}
+    .logo-badge{
+      width:52px;height:52px;background:var(--gold);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+      color:#0f2347;flex-shrink:0;
+    }
+    .logo-text h1{font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
+    .logo-text p{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;}
+    .left-title{font-family:'Playfair Display',serif;font-size:34px;line-height:1.3;margin-bottom:16px;}
+    .left-title span{color:var(--gold);}
+    .left-subtitle{font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:40px;}
+    .portal-links{display:flex;flex-direction:column;gap:12px;}
+    .portal-link{
+      display:flex;align-items:center;gap:14px;
+      padding:14px 18px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.1);
+      cursor:pointer;transition:all .2s;
+    }
+    .portal-link:hover{background:rgba(255,255,255,.08);border-color:rgba(201,162,39,.4);}
+    .portal-link.selected{background:rgba(201,162,39,.12);border-color:var(--gold);}
+    .portal-icon{
+      width:40px;height:40px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;flex-shrink:0;
+    }
+    .portal-link h4{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;}
+    .portal-link p{font-size:12px;color:rgba(255,255,255,.5);}
+    .left-footer{font-size:12px;color:rgba(255,255,255,.3);margin-top:40px;}
+    /* Right Panel - Login Form */
+    .login-right{
+      width:400px;background:#fff;
+      padding:60px 48px;
+      display:flex;flex-direction:column;justify-content:center;
+    }
+    .login-right h2{
+      font-family:'Playfair Display',serif;font-size:28px;
+      color:var(--primary);margin-bottom:8px;
+    }
+    .login-right p{font-size:14px;color:#6c757d;margin-bottom:36px;}
+    .form-group{margin-bottom:20px;}
+    .form-group label{display:block;font-size:13px;font-weight:600;color:var(--primary);margin-bottom:8px;}
+    .input-wrap{position:relative;}
+    .input-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#adb5bd;font-size:15px;}
+    .input-wrap input,.input-wrap select{
+      width:100%;padding:13px 14px 13px 42px;
+      border:2px solid #e9ecef;border-radius:10px;
+      font-size:14px;font-family:'Inter',sans-serif;outline:none;
+      color:#2c3e50;transition:border-color .2s;
+    }
+    .input-wrap input:focus,.input-wrap select:focus{border-color:var(--primary);}
+    .pw-toggle{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      cursor:pointer;color:#adb5bd;background:none;border:none;font-size:15px;
+    }
+    .login-btn{
+      width:100%;padding:14px;background:var(--primary);color:#fff;
+      border:none;border-radius:10px;font-size:16px;font-weight:700;
+      cursor:pointer;transition:all .3s;margin-top:8px;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      font-family:'Inter',sans-serif;
+    }
+    .login-btn:hover{background:#0f2347;box-shadow:0 8px 24px rgba(26,58,107,.4);}
+    .demo-box{
+      background:#f8f9fc;border:1px solid #e9ecef;border-radius:10px;
+      padding:16px;margin:20px 0;
+    }
+    .demo-box h5{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+    .demo-creds{display:flex;flex-direction:column;gap:6px;}
+    .cred-row{
+      display:flex;align-items:center;gap:8px;
+      font-size:12px;color:#495057;
+    }
+    .cred-badge{
+      padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;
+    }
+    .divider{
+      display:flex;align-items:center;gap:12px;
+      color:#adb5bd;font-size:12px;margin:20px 0;
+    }
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e9ecef;}
+    .back-link{
+      display:flex;align-items:center;gap:6px;
+      font-size:13px;color:var(--primary);font-weight:600;
+      margin-top:24px;justify-content:center;cursor:pointer;
+    }
+    .back-link:hover{text-decoration:underline;}
+    .forgot-link{font-size:13px;color:var(--primary);font-weight:600;float:right;}
+    .forgot-link:hover{text-decoration:underline;}
+    .alert{
+      background:#fef2f2;border:1px solid #fecaca;color:var(--danger);
+      border-radius:8px;padding:12px 14px;font-size:13px;
+      display:none;margin-bottom:16px;
+    }
+    @media(max-width:700px){
+      .login-left{display:none;}
+      .login-right{width:100%;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-circles">
+  <div class="circle circle-1"></div>
+  <div class="circle circle-2"></div>
+  <div class="circle circle-3"></div>
+</div>
+<div class="login-wrapper">
+  <!-- Left -->
+  <div class="login-left">
+    <div>
+      <div class="login-logo">
+        <div class="logo-badge">CCG</div>
+        <div class="logo-text">
+          <h1>Cyprus College Group</h1>
+          <p>Academic Portal</p>
+        </div>
+      </div>
+      <h2 class="left-title">Welcome to the <span>Unified Academic Portal</span></h2>
+      <p class="left-subtitle">Access all academic services, records, and administrative functions for Ledra College, School of Culinary Arts, and School of Automotive Engineering.</p>
+      <div class="portal-links">
+        <div class="portal-link selected" onclick="setRole('student',this)">
+          <div class="portal-icon" style="background:rgba(26,58,107,.4)"><i class="fas fa-user-graduate" style="color:#7eb3f0"></i></div>
+          <div>
+            <h4>Student Portal</h4>
+            <p>Courses, grades, schedule, fees & more</p>
+          </div>
+        </div>
+        <div class="portal-link" onclick="setRole('staff',this)">
+          <div class="portal-icon" style="background:rgba(39,174,96,.2)"><i class="fas fa-chalkboard-teacher" style="color:#27ae60"></i></div>
+          <div>
+            <h4>Faculty & Staff Portal</h4>
+            <p>Courses, gradebook, attendance, leave</p>
+          </div>
+        </div>
+        <div class="portal-link" onclick="setRole('admin',this)">
+          <div class="portal-icon" style="background:rgba(201,162,39,.2)"><i class="fas fa-shield-alt" style="color:var(--gold)"></i></div>
+          <div>
+            <h4>Admin Portal</h4>
+            <p>Full institutional management</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="left-footer">
+      © 2026 Cyprus College Group · Nicosia, Cyprus<br>
+      EU Accredited Institution · CYQAA Certified
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div class="login-right">
+    <h2>Sign In</h2>
+    <p id="portal-desc">Signing in as <strong>Student</strong></p>
+    <div class="alert" id="login-alert"><i class="fas fa-exclamation-circle"></i> Invalid credentials. Please try again.</div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email-input" placeholder="username@ledra.ac.cy">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Password <a href="#" class="forgot-link">Forgot password?</a></label>
+      <div class="input-wrap">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="pw-input" placeholder="Enter your password">
+        <button class="pw-toggle" onclick="togglePw()"><i class="fas fa-eye" id="eye-icon"></i></button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Campus / College</label>
+      <div class="input-wrap">
+        <i class="fas fa-university"></i>
+        <select id="campus-select">
+          <option value="ledra">Ledra College</option>
+          <option value="culinary">School of Culinary Arts</option>
+          <option value="auto">School of Automotive Engineering</option>
+        </select>
+      </div>
+    </div>
+    <button class="login-btn" onclick="doLogin()">
+      <i class="fas fa-sign-in-alt"></i>Sign In to Portal
+    </button>
+
+    <div class="divider">Demo Credentials</div>
+    <div class="demo-box">
+      <h5>Quick Access — Click to fill</h5>
+      <div class="demo-creds">
+        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('student@ledra.ac.cy','demo1234')">
+          <span class="cred-badge" style="background:#dbeafe;color:#1e40af">Student</span>
+          <span>student@ledra.ac.cy / demo1234</span>
+        </div>
+        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('staff@ledra.ac.cy','demo1234')">
+          <span class="cred-badge" style="background:#d1fae5;color:#065f46">Faculty</span>
+          <span>staff@ledra.ac.cy / demo1234</span>
+        </div>
+        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('admin@ledra.ac.cy','demo1234')">
+          <span class="cred-badge" style="background:#fef3c7;color:#92400e">Admin</span>
+          <span>admin@ledra.ac.cy / demo1234</span>
+        </div>
+      </div>
+    </div>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i>Back to Public Website</a>
+  </div>
+</div>
+
+<script>
+let selectedRole='student';
+function setRole(role,el){
+  selectedRole=role;
+  document.querySelectorAll('.portal-link').forEach(l=>l.classList.remove('selected'));
+  el.classList.add('selected');
+  const desc={student:'Student',staff:'Faculty / Staff',admin:'Administrator'};
+  document.getElementById('portal-desc').innerHTML=`Signing in as <strong>${desc[role]}</strong>`;
+}
+function togglePw(){
+  const inp=document.getElementById('pw-input');
+  const icon=document.getElementById('eye-icon');
+  inp.type=inp.type==='password'?'text':'password';
+  icon.className=inp.type==='password'?'fas fa-eye':'fas fa-eye-slash';
+}
+function fillCreds(email,pw){
+  document.getElementById('email-input').value=email;
+  document.getElementById('pw-input').value=pw;
+  if(email.startsWith('student')) setRole('student',document.querySelectorAll('.portal-link')[0]);
+  else if(email.startsWith('staff')) setRole('staff',document.querySelectorAll('.portal-link')[1]);
+  else setRole('admin',document.querySelectorAll('.portal-link')[2]);
+}
+function doLogin(){
+  const email=document.getElementById('email-input').value;
+  const pw=document.getElementById('pw-input').value;
+  const alert=document.getElementById('login-alert');
+  if(!email||!pw){alert.style.display='block';return;}
+  // Demo: route by email or selected role
+  const valid={'student@ledra.ac.cy':'demo1234','staff@ledra.ac.cy':'demo1234','admin@ledra.ac.cy':'demo1234'};
+  if(valid[email]&&valid[email]===pw){
+    const routes={'student@ledra.ac.cy':'student/index.html','staff@ledra.ac.cy':'staff/index.html','admin@ledra.ac.cy':'admin/index.html'};
+    const roleRoutes={'student':'student/index.html','staff':'staff/index.html','admin':'admin/index.html'};
+    window.location.href=routes[email]||roleRoutes[selectedRole];
+  } else {
+    alert.style.display='block';
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>

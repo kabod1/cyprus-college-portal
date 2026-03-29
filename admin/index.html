@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | Cyprus College Group</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--primary:#1a3a6b;--primary-dark:#0f2347;--gold:#c9a227;--success:#27ae60;--warning:#f39c12;--danger:#e74c3c;--info:#3498db;--sidebar-w:268px;--header-h:64px;--gray-100:#f8f9fc;--gray-200:#e9ecef;--gray-600:#6c757d;--text:#2c3e50;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:var(--gray-100);color:var(--text);display:flex;min-height:100vh;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--primary-dark);position:fixed;left:0;top:0;z-index:100;display:flex;flex-direction:column;overflow-y:auto;}
+    .sidebar-header{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;}
+    .logo-badge{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--primary-dark);flex-shrink:0;}
+    .logo-txt h2{font-size:13px;font-weight:700;color:#fff;line-height:1.2;}
+    .logo-txt p{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;}
+    .admin-badge{margin:12px 20px;background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.3);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;}
+    .admin-badge i{color:var(--gold);}
+    .admin-badge span{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+    .sidebar-user{padding:12px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+    .user-av{width:38px;height:38px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--primary-dark);flex-shrink:0;}
+    .sidebar-user .info h4{font-size:13px;font-weight:600;color:#fff;}
+    .sidebar-user .info p{font-size:10px;color:rgba(255,255,255,.4);}
+    .sidebar-nav{flex:1;padding:8px 0;}
+    .nav-group{margin-bottom:4px;}
+    .nav-group-title{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:10px 20px 4px;}
+    .nav-item{display:flex;align-items:center;gap:11px;padding:9px 20px;cursor:pointer;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.6);border-left:3px solid transparent;transition:all .15s;}
+    .nav-item:hover{background:rgba(255,255,255,.05);color:#fff;border-left-color:rgba(201,162,39,.4);}
+    .nav-item.active{background:rgba(201,162,39,.1);color:#fff;border-left-color:var(--gold);}
+    .nav-item i{width:16px;text-align:center;font-size:13px;flex-shrink:0;}
+    .nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;}
+    .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sidebar-footer a{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.4);transition:color .2s;cursor:pointer;}
+    .sidebar-footer a:hover{color:#fff;}
+
+    /* MAIN */
+    .main-wrap{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+    .topbar{height:var(--header-h);background:#fff;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:50;}
+    .topbar-left{display:flex;align-items:center;gap:12px;}
+    .topbar-left h2{font-size:17px;font-weight:700;color:var(--primary);}
+    .breadcrumb{font-size:12px;color:var(--gray-600);display:flex;align-items:center;gap:6px;}
+    .breadcrumb i{font-size:10px;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .tb-icon{width:34px;height:34px;border-radius:8px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gray-600);cursor:pointer;border:1px solid var(--gray-200);position:relative;transition:all .2s;}
+    .tb-icon:hover{background:var(--primary);color:#fff;}
+    .notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--danger);border-radius:50%;}
+    .tb-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:5px 10px;border-radius:8px;transition:background .2s;}
+    .tb-user:hover{background:var(--gray-100);}
+    .tb-user .av{width:32px;height:32px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--primary-dark);}
+    .tb-user .nm{font-size:13px;font-weight:600;color:var(--text);}
+    .content{flex:1;padding:28px;}
+
+    /* VIEWS */
+    .view{display:none;}
+    .view.active{display:block;}
+
+    /* CARDS */
+    .card{background:#fff;border-radius:12px;border:1px solid var(--gray-200);}
+    .card-header{padding:18px 22px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+    .card-header h3{font-size:15px;font-weight:700;color:var(--primary);}
+    .card-body{padding:22px;}
+
+    /* STAT CARDS */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+    .kpi-card{background:#fff;border-radius:12px;padding:20px;border:1px solid var(--gray-200);display:flex;align-items:center;gap:14px;transition:all .2s;}
+    .kpi-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px);}
+    .kpi-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+    .kpi-val{font-size:26px;font-weight:800;color:var(--primary);line-height:1;}
+    .kpi-lbl{font-size:12px;color:var(--gray-600);margin-top:3px;}
+    .kpi-trend{font-size:11px;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:3px;}
+    .trend-up{color:var(--success);}
+    .trend-down{color:var(--danger);}
+
+    /* GRIDS */
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+    .g-3-1{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+
+    /* TABLE */
+    table{width:100%;border-collapse:collapse;}
+    th{font-size:10.5px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;background:var(--gray-100);text-align:left;border-bottom:1px solid var(--gray-200);}
+    td{font-size:13px;padding:11px 14px;border-bottom:1px solid var(--gray-200);color:var(--text);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:#fafbff;}
+
+    /* BADGES */
+    .badge{padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;}
+    .bs{background:#d1fae5;color:#065f46;}
+    .bw{background:#fef3c7;color:#92400e;}
+    .bd{background:#fee2e2;color:#991b1b;}
+    .bi{background:#dbeafe;color:#1e40af;}
+    .bg{background:#f3f4f6;color:#374151;}
+    .bp{background:#ede9fe;color:#5b21b6;}
+
+    /* FORM */
+    .fg{margin-bottom:14px;}
+    .fg label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;}
+    .fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;color:var(--text);transition:border-color .2s;}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);}
+    .fg textarea{height:90px;resize:vertical;}
+    .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+    /* BUTTONS */
+    .btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;font-family:'Inter',sans-serif;}
+    .btn-primary{background:var(--primary);color:#fff;}
+    .btn-primary:hover{background:var(--primary-dark);}
+    .btn-success{background:var(--success);color:#fff;}
+    .btn-danger{background:var(--danger);color:#fff;}
+    .btn-warning{background:var(--warning);color:#fff;}
+    .btn-info{background:var(--info);color:#fff;}
+    .btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary);}
+    .btn-outline:hover{background:var(--primary);color:#fff;}
+    .btn-sm{padding:6px 13px;font-size:11.5px;}
+    .btn-xs{padding:4px 9px;font-size:11px;}
+    .btn-gold{background:var(--gold);color:var(--primary-dark);}
+
+    /* PAGE TITLE */
+    .pt{margin-bottom:22px;}
+    .pt h1{font-size:22px;font-weight:800;color:var(--primary);}
+    .pt p{font-size:13px;color:var(--gray-600);margin-top:3px;}
+
+    /* CHART CONTAINER */
+    .chart-wrap{position:relative;height:260px;}
+
+    /* PROGRESS */
+    .pbar{height:7px;background:var(--gray-200);border-radius:4px;overflow:hidden;}
+    .pfill{height:100%;border-radius:4px;transition:width .5s;}
+
+    /* AVATAR */
+    .av{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+
+    /* MODULE TILES */
+    .module-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+    .module-tile{background:#fff;border-radius:12px;padding:20px;border:1px solid var(--gray-200);text-align:center;cursor:pointer;transition:all .2s;}
+    .module-tile:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(26,58,107,.1);transform:translateY(-2px);}
+    .module-tile .icon{font-size:32px;margin-bottom:10px;}
+    .module-tile h4{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:4px;}
+    .module-tile p{font-size:11px;color:var(--gray-600);}
+
+    /* TIMELINE */
+    .timeline{display:flex;flex-direction:column;gap:0;}
+    .tl-item{display:flex;gap:14px;padding-bottom:16px;position:relative;}
+    .tl-item::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--gray-200);}
+    .tl-item:last-child::before{display:none;}
+    .tl-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;z-index:1;}
+    .tl-content h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+    .tl-content p{font-size:12px;color:var(--gray-600);}
+    .tl-content .meta{font-size:11px;color:#adb5bd;margin-top:2px;}
+
+    @media(max-width:900px){
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+      .g2,.g3,.g4{grid-template-columns:1fr;}
+      .module-grid{grid-template-columns:repeat(2,1fr);}
+      .g-3-1{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="logo-badge">CCG</div>
+      <div class="logo-txt"><h2>Cyprus College Group</h2><p>Administration Portal</p></div>
+    </div>
+  </div>
+  <div class="admin-badge"><i class="fas fa-shield-alt"></i><span>System Administrator</span></div>
+  <div class="sidebar-user">
+    <div class="user-av">GA</div>
+    <div class="info"><h4>George Antoniou</h4><p>System Admin · All Colleges</p></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <div class="nav-item active" onclick="sv('dashboard',this)"><i class="fas fa-th-large"></i>Dashboard</div>
+      <div class="nav-item" onclick="sv('analytics',this)"><i class="fas fa-chart-line"></i>Analytics & Reports</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admissions</div>
+      <div class="nav-item" onclick="sv('applications',this)"><i class="fas fa-file-alt"></i>Applications<span class="nav-badge">24</span></div>
+      <div class="nav-item" onclick="sv('enrollment',this)"><i class="fas fa-user-plus"></i>Enrollment</div>
+      <div class="nav-item" onclick="sv('interviews',this)"><i class="fas fa-comments"></i>Interviews</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Students</div>
+      <div class="nav-item" onclick="sv('students',this)"><i class="fas fa-users"></i>All Students</div>
+      <div class="nav-item" onclick="sv('student-records',this)"><i class="fas fa-folder-open"></i>Student Records</div>
+      <div class="nav-item" onclick="sv('disciplinary',this)"><i class="fas fa-gavel"></i>Disciplinary</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Academic</div>
+      <div class="nav-item" onclick="sv('courses',this)"><i class="fas fa-book"></i>Courses & Programs</div>
+      <div class="nav-item" onclick="sv('curriculum',this)"><i class="fas fa-sitemap"></i>Curriculum</div>
+      <div class="nav-item" onclick="sv('timetable',this)"><i class="fas fa-calendar-alt"></i>Timetable</div>
+      <div class="nav-item" onclick="sv('calendar',this)"><i class="fas fa-calendar"></i>Academic Calendar</div>
+      <div class="nav-item" onclick="sv('exams',this)"><i class="fas fa-pencil-alt"></i>Examinations</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Faculty & HR</div>
+      <div class="nav-item" onclick="sv('staff',this)"><i class="fas fa-chalkboard-teacher"></i>Staff Directory</div>
+      <div class="nav-item" onclick="sv('hr',this)"><i class="fas fa-user-tie"></i>HR Management</div>
+      <div class="nav-item" onclick="sv('payroll',this)"><i class="fas fa-money-bill-wave"></i>Payroll</div>
+      <div class="nav-item" onclick="sv('leave',this)"><i class="fas fa-umbrella-beach"></i>Leave Management</div>
+      <div class="nav-item" onclick="sv('recruitment',this)"><i class="fas fa-search"></i>Recruitment</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Finance</div>
+      <div class="nav-item" onclick="sv('fees',this)"><i class="fas fa-credit-card"></i>Fees & Payments</div>
+      <div class="nav-item" onclick="sv('scholarships',this)"><i class="fas fa-award"></i>Scholarships</div>
+      <div class="nav-item" onclick="sv('accounting',this)"><i class="fas fa-calculator"></i>Accounting</div>
+      <div class="nav-item" onclick="sv('procurement',this)"><i class="fas fa-shopping-cart"></i>Procurement</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Campus Services</div>
+      <div class="nav-item" onclick="sv('library',this)"><i class="fas fa-book-reader"></i>Library</div>
+      <div class="nav-item" onclick="sv('accommodation',this)"><i class="fas fa-building"></i>Accommodation</div>
+      <div class="nav-item" onclick="sv('events',this)"><i class="fas fa-star"></i>Events</div>
+      <div class="nav-item" onclick="sv('communications',this)"><i class="fas fa-bullhorn"></i>Communications</div>
+      <div class="nav-item" onclick="sv('documents',this)"><i class="fas fa-file-invoice"></i>Documents</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">System</div>
+      <div class="nav-item" onclick="sv('settings',this)"><i class="fas fa-cog"></i>Settings</div>
+      <div class="nav-item" onclick="sv('roles',this)"><i class="fas fa-user-lock"></i>Roles & Permissions</div>
+      <div class="nav-item" onclick="sv('audit',this)"><i class="fas fa-history"></i>Audit Log</div>
+    </div>
+  </nav>
+  <div class="sidebar-footer"><a href="../login.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a></div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2 id="page-title">Dashboard</h2>
+      <div class="breadcrumb" id="breadcrumb" style="margin-left:12px;padding-left:12px;border-left:1px solid var(--gray-200)">
+        <i class="fas fa-home"></i><i class="fas fa-chevron-right"></i><span>Dashboard</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-icon"><i class="fas fa-search"></i></div>
+      <div class="tb-icon"><i class="fas fa-bell"></i><span class="notif-dot"></span></div>
+      <div class="tb-icon"><i class="fas fa-envelope"></i><span class="notif-dot"></span></div>
+      <div class="tb-user">
+        <div class="av" style="background:var(--gold);color:var(--primary-dark)">GA</div>
+        <span class="nm">G. Antoniou</span>
+        <i class="fas fa-chevron-down" style="font-size:10px;color:#adb5bd;margin-left:4px"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="view active" id="view-dashboard">
+      <div class="pt"><h1>Institutional Dashboard</h1><p>Cyprus College Group · AY 2025/26 · Semester 2 · As of 28 March 2026</p></div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-users" style="color:#1d4ed8"></i></div>
+          <div><div class="kpi-val">4,823</div><div class="kpi-lbl">Total Students</div><div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i>+8.2% vs last year</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-chalkboard-teacher" style="color:#065f46"></i></div>
+          <div><div class="kpi-val">328</div><div class="kpi-lbl">Academic & Admin Staff</div><div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i>+12 new hires</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-file-alt" style="color:#92400e"></i></div>
+          <div><div class="kpi-val">412</div><div class="kpi-lbl">Pending Applications</div><div class="kpi-trend" style="color:var(--warning)"><i class="fas fa-clock"></i>24 require action</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-euro-sign" style="color:#065f46"></i></div>
+          <div><div class="kpi-val">€2.4M</div><div class="kpi-lbl">Revenue YTD</div><div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i>+5.4% vs budget</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#ede9fe"><i class="fas fa-book-open" style="color:#5b21b6"></i></div>
+          <div><div class="kpi-val">148</div><div class="kpi-lbl">Active Courses</div><div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i>6 new this semester</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-exclamation-triangle" style="color:#991b1b"></i></div>
+          <div><div class="kpi-val">€486K</div><div class="kpi-lbl">Outstanding Fees</div><div class="kpi-trend trend-down"><i class="fas fa-arrow-up"></i>+€42K overdue</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-graduation-cap" style="color:#065f46"></i></div>
+          <div><div class="kpi-val">92%</div><div class="kpi-lbl">Graduate Employment Rate</div><div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i>+3% vs 2024</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-clipboard-check" style="color:#92400e"></i></div>
+          <div><div class="kpi-val">84%</div><div class="kpi-lbl">Average Attendance</div><div class="kpi-trend trend-down"><i class="fas fa-arrow-down"></i>-2% vs target</div></div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="g-3-1" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><h3>Enrollment by College & Program Type</h3><select style="padding:6px 10px;border:2px solid var(--gray-200);border-radius:6px;font-size:12px;outline:none"><option>2025/26</option><option>2024/25</option></select></div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="enrollChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>College Split</h3></div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:200px"><canvas id="splitChart"></canvas></div>
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#1a3a6b;border-radius:2px;display:inline-block"></span>Ledra College</span><strong>2,841</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#8b2e2e;border-radius:2px;display:inline-block"></span>Culinary Arts</span><strong>1,104</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#1a4a1a;border-radius:2px;display:inline-block"></span>Automotive Eng.</span><strong>878</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><h3>Fee Collection — 2025/26</h3></div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="feeChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Recent Activity</h3><span class="badge bi">Live</span></div>
+          <div class="card-body" style="padding:16px 20px">
+            <div class="timeline">
+              <div class="tl-item"><div class="tl-dot" style="background:#dbeafe;color:#1d4ed8"><i class="fas fa-user-plus"></i></div><div class="tl-content"><h4>New Application Received</h4><p>MSc Food Science — Ledra College (Int'l)</p><div class="meta">2 minutes ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot" style="background:#d1fae5;color:#065f46"><i class="fas fa-check-circle"></i></div><div class="tl-content"><h4>Fee Payment Confirmed</h4><p>Andreas Kyriakou — €2,000 (Sem 2 instalment)</p><div class="meta">14 minutes ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot" style="background:#fef3c7;color:#92400e"><i class="fas fa-exclamation-triangle"></i></div><div class="tl-content"><h4>Low Attendance Alert</h4><p>Stavros Nikolaou — BUS301 (68%)</p><div class="meta">1 hour ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot" style="background:#ede9fe;color:#5b21b6"><i class="fas fa-file-upload"></i></div><div class="tl-content"><h4>Exam Timetable Published</h4><p>Apr/May 2026 — All colleges</p><div class="meta">3 hours ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot" style="background:#fee2e2;color:#991b1b"><i class="fas fa-times-circle"></i></div><div class="tl-content"><h4>Application Declined</h4><p>BEng Automotive — Incomplete documents</p><div class="meta">5 hours ago</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Modules -->
+      <div class="card">
+        <div class="card-header"><h3>Quick Access — Administrative Modules</h3></div>
+        <div class="card-body">
+          <div class="module-grid">
+            <div class="module-tile" onclick="sv('applications',document.querySelector('[onclick*=applications]'))"><div class="icon">📋</div><h4>Applications</h4><p>24 pending review</p></div>
+            <div class="module-tile" onclick="sv('students',document.querySelector('[onclick*=\'students\']'))"><div class="icon">🎓</div><h4>Students</h4><p>4,823 enrolled</p></div>
+            <div class="module-tile" onclick="sv('fees',document.querySelector('[onclick*=fees]'))"><div class="icon">💳</div><h4>Fee Collection</h4><p>€486K outstanding</p></div>
+            <div class="module-tile" onclick="sv('payroll',document.querySelector('[onclick*=payroll]'))"><div class="icon">💰</div><h4>Payroll</h4><p>Next run: 28 Apr</p></div>
+            <div class="module-tile" onclick="sv('exams',document.querySelector('[onclick*=exams]'))"><div class="icon">📝</div><h4>Examinations</h4><p>April/May 2026</p></div>
+            <div class="module-tile" onclick="sv('timetable',document.querySelector('[onclick*=timetable]'))"><div class="icon">📅</div><h4>Timetable</h4><p>Semester 2 active</p></div>
+            <div class="module-tile" onclick="sv('library',document.querySelector('[onclick*=library]'))"><div class="icon">📚</div><h4>Library</h4><p>12,400 resources</p></div>
+            <div class="module-tile" onclick="sv('events',document.querySelector('[onclick*=events]'))"><div class="icon">🎉</div><h4>Events</h4><p>3 upcoming events</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== APPLICATIONS ===== -->
+    <div class="view" id="view-applications">
+      <div class="pt"><h1>Admissions — Applications</h1><p>September 2026 intake · 412 total applications received</p></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-inbox" style="color:#1d4ed8"></i></div><div><div class="kpi-val">412</div><div class="kpi-lbl">Total Received</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-clock" style="color:#92400e"></i></div><div><div class="kpi-val">24</div><div class="kpi-lbl">Awaiting Review</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#ede9fe"><i class="fas fa-user-check" style="color:#5b21b6"></i></div><div><div class="kpi-val">198</div><div class="kpi-lbl">Under Review</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-check-circle" style="color:#065f46"></i></div><div><div class="kpi-val">156</div><div class="kpi-lbl">Accepted</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-times-circle" style="color:#991b1b"></i></div><div><div class="kpi-val">34</div><div class="kpi-lbl">Declined</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Application List</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Colleges</option><option>Ledra College</option><option>Culinary Arts</option><option>Automotive</option></select>
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Status</option><option>Pending</option><option>Under Review</option><option>Accepted</option><option>Declined</option></select>
+            <input type="text" placeholder="Search applicant..." style="padding:7px 12px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none;width:180px">
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>New Application</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr><th>App ID</th><th>Applicant Name</th><th>Nationality</th><th>Program Applied</th><th>College</th><th>Submitted</th><th>Documents</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>#APP-2026-1201</td><td><div style="font-weight:600">Sophia Christodoulou</div><div style="font-size:11px;color:var(--gray-600)">sophiac@gmail.com</div></td><td>🇨🇾 Cypriot</td><td>BA Business Administration</td><td>Ledra</td><td>27 Mar 2026</td><td><span class="badge bs">Complete</span></td><td><span class="badge bw">Pending Review</span></td><td><button class="btn btn-primary btn-xs">Review</button></td></tr>
+              <tr><td>#APP-2026-1198</td><td><div style="font-weight:600">Marco Rossi</div><div style="font-size:11px;color:var(--gray-600)">m.rossi@email.it</div></td><td>🇮🇹 Italian</td><td>MSc Automotive Systems Design</td><td>Automotive</td><td>26 Mar 2026</td><td><span class="badge bs">Complete</span></td><td><span class="badge bp">Under Review</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+              <tr><td>#APP-2026-1195</td><td><div style="font-weight:600">Aisha Mensah</div><div style="font-size:11px;color:var(--gray-600)">a.mensah@yahoo.com</div></td><td>🇬🇭 Ghanaian</td><td>BSc Culinary Arts & Gastronomy</td><td>Culinary</td><td>25 Mar 2026</td><td><span class="badge bd">Missing: Transcript</span></td><td><span class="badge bw">Pending</span></td><td><button class="btn btn-warning btn-xs" style="background:var(--warning);color:#fff">Request Docs</button></td></tr>
+              <tr><td>#APP-2026-1180</td><td><div style="font-weight:600">Yiannis Stavros</div><div style="font-size:11px;color:var(--gray-600)">y.stavros@live.com</div></td><td>🇨🇾 Cypriot</td><td>LLB Law (English)</td><td>Ledra</td><td>20 Mar 2026</td><td><span class="badge bs">Complete</span></td><td><span class="badge bs">Accepted</span></td><td><a class="btn btn-success btn-xs" style="background:var(--success);color:#fff">Issue Offer</a></td></tr>
+              <tr><td>#APP-2026-1172</td><td><div style="font-weight:600">Priya Nair</div><div style="font-size:11px;color:var(--gray-600)">priya.nair@gmail.com</div></td><td>🇮🇳 Indian</td><td>MBA General Management</td><td>Ledra</td><td>18 Mar 2026</td><td><span class="badge bs">Complete</span></td><td><span class="badge bs">Accepted</span></td><td><button class="btn btn-success btn-xs" style="background:var(--success);color:#fff">Issue Offer</button></td></tr>
+              <tr><td>#APP-2026-1160</td><td><div style="font-weight:600">Christos Miltiadou</div><div style="font-size:11px;color:var(--gray-600)">c.milt@gmail.com</div></td><td>🇨🇾 Cypriot</td><td>BEng Automotive Engineering</td><td>Automotive</td><td>15 Mar 2026</td><td><span class="badge bd">Missing: Portfolio</span></td><td><span class="badge bd">Declined</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STUDENTS ===== -->
+    <div class="view" id="view-students">
+      <div class="pt"><h1>Student Management</h1><p>All 4,823 enrolled students across all three colleges</p></div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-university" style="color:#1d4ed8"></i></div><div><div class="kpi-val">2,841</div><div class="kpi-lbl">Ledra College</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-utensils" style="color:#991b1b"></i></div><div><div class="kpi-val">1,104</div><div class="kpi-lbl">Culinary Arts</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-car" style="color:#065f46"></i></div><div><div class="kpi-val">878</div><div class="kpi-lbl">Automotive Engineering</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-globe" style="color:#92400e"></i></div><div><div class="kpi-val">1,240</div><div class="kpi-lbl">International Students</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Student Directory</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Colleges</option><option>Ledra College</option><option>Culinary Arts</option><option>Automotive</option></select>
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Years</option><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option></select>
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Status</option><option>Active</option><option>Suspended</option><option>Graduated</option><option>Withdrawn</option></select>
+            <input type="text" placeholder="Search by name or ID..." style="padding:7px 12px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none;width:200px">
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>Add Student</button>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i>Export</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>College</th><th>Program</th><th>Year</th><th>GPA</th><th>Attendance</th><th>Fees Status</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>LC-2024-0342</td><td><div style="font-weight:600">Andreas Kyriakou</div><div style="font-size:11px;color:var(--gray-600)">ak2024@ledra.ac.cy</div></td><td>Ledra</td><td>BA Business Admin</td><td>2</td><td style="color:var(--success);font-weight:700">3.72</td><td>87%</td><td><span class="badge bw">€1,200 due</span></td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+              <tr><td>LC-2024-0158</td><td><div style="font-weight:600">Maria Charalambous</div><div style="font-size:11px;color:var(--gray-600)">mc2024@ledra.ac.cy</div></td><td>Ledra</td><td>BA Business Admin</td><td>2</td><td style="color:var(--success);font-weight:700">3.95</td><td>97%</td><td><span class="badge bs">Paid</span></td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+              <tr><td>CSCA-2024-0089</td><td><div style="font-weight:600">Elena Petridou</div><div style="font-size:11px;color:var(--gray-600)">ep2024@csca.ac.cy</div></td><td>Culinary</td><td>BSc Culinary Arts</td><td>1</td><td style="color:var(--success);font-weight:700">3.60</td><td>92%</td><td><span class="badge bs">Paid</span></td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+              <tr><td>CIAE-2023-0201</td><td><div style="font-weight:600">Nikos Hadjigeorgis</div><div style="font-size:11px;color:var(--gray-600)">nh2023@ciae.ac.cy</div></td><td>Automotive</td><td>BEng Automotive Eng</td><td>3</td><td style="color:var(--warning);font-weight:700">2.45</td><td>74%</td><td><span class="badge bd">€3,200 overdue</span></td><td><span class="badge bw">Probation</span></td><td><button class="btn btn-danger btn-xs">Action</button></td></tr>
+              <tr><td>LC-2025-0512</td><td><div style="font-weight:600">Sophia Constantinou</div><div style="font-size:11px;color:var(--gray-600)">sc2025@ledra.ac.cy</div></td><td>Ledra</td><td>LLB Law (English)</td><td>1</td><td style="color:var(--success);font-weight:700">3.88</td><td>95%</td><td><span class="badge bs">Scholarship</span></td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+              <tr><td>CSCA-2023-0145</td><td><div style="font-weight:600">Marco Antoniades</div><div style="font-size:11px;color:var(--gray-600)">ma2023@csca.ac.cy</div></td><td>Culinary</td><td>Diploma Pastry Arts</td><td>2</td><td style="color:var(--info);font-weight:700">3.10</td><td>88%</td><td><span class="badge bs">Paid</span></td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAFF ===== -->
+    <div class="view" id="view-staff">
+      <div class="pt"><h1>Staff Directory</h1><p>All academic and administrative staff — 328 members</p></div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Staff Directory</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Departments</option><option>Business & Law</option><option>IT & Computing</option><option>Culinary Arts</option><option>Automotive Eng.</option><option>Administration</option></select>
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Types</option><option>Academic</option><option>Administrative</option><option>Technical</option></select>
+            <input type="text" placeholder="Search staff..." style="padding:7px 12px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none;width:180px">
+            <button class="btn btn-primary btn-sm"><i class="fas fa-user-plus"></i>Add Staff</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr><th>Staff ID</th><th>Name</th><th>Role</th><th>Department</th><th>College</th><th>Contract</th><th>Join Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>LC-ST-0042</td><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:#1a3a6b;width:30px;height:30px;font-size:11px">EP</div><div><div style="font-weight:600;font-size:13px">Dr. Elena Papadopoulos</div><div style="font-size:11px;color:var(--gray-600)">e.papadopoulos@ledra.ac.cy</div></div></div></td><td>Senior Lecturer</td><td>Business & Law</td><td>Ledra</td><td>Full-Time</td><td>Sep 2019</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>LC-ST-0018</td><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:#2563eb;width:30px;height:30px;font-size:11px">MA</div><div><div style="font-weight:600;font-size:13px">Prof. Michalis Antoniou</div><div style="font-size:11px;color:var(--gray-600)">m.antoniou@ledra.ac.cy</div></div></div></td><td>Professor</td><td>Business & Finance</td><td>Ledra</td><td>Full-Time</td><td>Sep 2012</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>CSCA-ST-0012</td><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:#8b2e2e;width:30px;height:30px;font-size:11px">GP</div><div><div style="font-weight:600;font-size:13px">Chef Giorgio Pasolini</div><div style="font-size:11px;color:var(--gray-600)">g.pasolini@csca.ac.cy</div></div></div></td><td>Head of Culinary</td><td>Culinary Arts</td><td>Culinary</td><td>Full-Time</td><td>Jan 2018</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>CIAE-ST-0007</td><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:#1a4a1a;width:30px;height:30px;font-size:11px">DS</div><div><div style="font-weight:600;font-size:13px">Dr. Demetris Stavrou</div><div style="font-size:11px;color:var(--gray-600)">d.stavrou@ciae.ac.cy</div></div></div></td><td>Head of Engineering</td><td>Automotive Eng.</td><td>Automotive</td><td>Full-Time</td><td>Sep 2016</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>LC-ST-0098</td><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:#6b21a8;width:30px;height:30px;font-size:11px">AK</div><div><div style="font-weight:600;font-size:13px">Anna Kyriakou</div><div style="font-size:11px;color:var(--gray-600)">a.kyriakou@ledra.ac.cy</div></div></div></td><td>Registrar</td><td>Academic Registry</td><td>All</td><td>Full-Time</td><td>Mar 2021</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAYROLL ===== -->
+    <div class="view" id="view-payroll">
+      <div class="pt"><h1>Payroll Management</h1><p>March 2026 Payroll — Run date: 28 March 2026</p></div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-euro-sign" style="color:#065f46"></i></div><div><div class="kpi-val">€612K</div><div class="kpi-lbl">Total Gross Payroll</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-users" style="color:#1d4ed8"></i></div><div><div class="kpi-val">328</div><div class="kpi-lbl">Employees Paid</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-file-invoice" style="color:#92400e"></i></div><div><div class="kpi-val">€142K</div><div class="kpi-lbl">Tax & Deductions</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-check-circle" style="color:#065f46"></i></div><div><div class="kpi-val">€470K</div><div class="kpi-lbl">Net Pay Disbursed</div></div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-header"><h3>Payroll Summary by Department</h3><button class="btn btn-primary btn-sm"><i class="fas fa-play"></i>Run Payroll</button></div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead><tr><th>Department</th><th>Staff Count</th><th>Gross</th><th>Deductions</th><th>Net</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Business & Law (Ledra)</td><td>42</td><td>€94,800</td><td>€22,500</td><td style="font-weight:700;color:var(--success)">€72,300</td><td><span class="badge bs">Processed</span></td></tr>
+                <tr><td>IT & Computing (Ledra)</td><td>28</td><td>€67,200</td><td>€16,000</td><td style="font-weight:700;color:var(--success)">€51,200</td><td><span class="badge bs">Processed</span></td></tr>
+                <tr><td>Culinary Arts (CSCA)</td><td>38</td><td>€85,500</td><td>€20,200</td><td style="font-weight:700;color:var(--success)">€65,300</td><td><span class="badge bs">Processed</span></td></tr>
+                <tr><td>Automotive Engineering (CIAE)</td><td>32</td><td>€76,800</td><td>€18,200</td><td style="font-weight:700;color:var(--success)">€58,600</td><td><span class="badge bs">Processed</span></td></tr>
+                <tr><td>Administration (All)</td><td>188</td><td>€287,700</td><td>€65,400</td><td style="font-weight:700;color:var(--success)">€222,300</td><td><span class="badge bs">Processed</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Payroll History</h3></div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead><tr><th>Period</th><th>Total Gross</th><th>Total Net</th><th>Run By</th><th>Report</th></tr></thead>
+              <tbody>
+                <tr><td>March 2026</td><td>€612,000</td><td style="font-weight:700;color:var(--success)">€470,000</td><td>G. Antoniou</td><td><a href="#" class="btn btn-outline btn-xs"><i class="fas fa-download"></i></a></td></tr>
+                <tr><td>February 2026</td><td>€608,400</td><td style="font-weight:700;color:var(--success)">€467,200</td><td>G. Antoniou</td><td><a href="#" class="btn btn-outline btn-xs"><i class="fas fa-download"></i></a></td></tr>
+                <tr><td>January 2026</td><td>€608,400</td><td style="font-weight:700;color:var(--success)">€467,200</td><td>G. Antoniou</td><td><a href="#" class="btn btn-outline btn-xs"><i class="fas fa-download"></i></a></td></tr>
+                <tr><td>December 2025</td><td>€780,000</td><td style="font-weight:700;color:var(--success)">€598,000</td><td>G. Antoniou</td><td><a href="#" class="btn btn-outline btn-xs"><i class="fas fa-download"></i></a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FEES ===== -->
+    <div class="view" id="view-fees">
+      <div class="pt"><h1>Fees & Payments</h1><p>AY 2025/26 financial overview</p></div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-euro-sign" style="color:#065f46"></i></div><div><div class="kpi-val">€9.8M</div><div class="kpi-lbl">Annual Tuition Revenue (Budget)</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-check-circle" style="color:#1d4ed8"></i></div><div><div class="kpi-val">€9.3M</div><div class="kpi-lbl">Collected to Date</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-exclamation-triangle" style="color:#991b1b"></i></div><div><div class="kpi-val">€486K</div><div class="kpi-lbl">Outstanding (Current)</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-clock" style="color:#92400e"></i></div><div><div class="kpi-val">€124K</div><div class="kpi-lbl">30+ Days Overdue</div></div></div>
+      </div>
+      <div class="g-3-1" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><h3>Outstanding Fees — Student View</h3>
+            <div style="display:flex;gap:8px"><select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Colleges</option></select><button class="btn btn-danger btn-sm"><i class="fas fa-paper-plane"></i>Send Reminders</button></div>
+          </div>
+          <div class="card-body" style="padding:0;overflow-x:auto">
+            <table>
+              <thead><tr><th>Student</th><th>College</th><th>Amount Due</th><th>Due Date</th><th>Days Overdue</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>Andreas Kyriakou (LC-2024-0342)</td><td>Ledra</td><td style="font-weight:700;color:var(--warning)">€1,200</td><td>31 Mar 2026</td><td>—</td><td><button class="btn btn-outline btn-xs">Remind</button></td></tr>
+                <tr><td>Nikos Hadjigeorgis (CIAE-2023-0201)</td><td>Automotive</td><td style="font-weight:700;color:var(--danger)">€3,200</td><td>31 Jan 2026</td><td style="color:var(--danger);font-weight:700">56</td><td><button class="btn btn-danger btn-xs">Escalate</button></td></tr>
+                <tr><td>Petros Andreou (LC-2024-0389)</td><td>Ledra</td><td style="font-weight:700;color:var(--warning)">€900</td><td>31 Mar 2026</td><td>—</td><td><button class="btn btn-outline btn-xs">Remind</button></td></tr>
+                <tr><td>Maria Georgiou (CSCA-2025-0234)</td><td>Culinary</td><td style="font-weight:700;color:var(--danger)">€2,100</td><td>28 Feb 2026</td><td style="color:var(--danger);font-weight:700">28</td><td><button class="btn btn-danger btn-xs">Escalate</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Fee Structure</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="padding:12px;background:#f0fdf4;border-radius:8px;border-left:3px solid #065f46"><div style="font-size:12px;font-weight:700;color:#065f46">Ledra College</div><div style="font-size:18px;font-weight:800;color:var(--primary)">€5,500/yr</div><div style="font-size:11px;color:var(--gray-600)">Undergraduate · €4,800 postgrad</div></div>
+              <div style="padding:12px;background:#fff5f5;border-radius:8px;border-left:3px solid #8b2e2e"><div style="font-size:12px;font-weight:700;color:#8b2e2e">Culinary Arts (CSCA)</div><div style="font-size:18px;font-weight:800;color:var(--primary)">€6,200/yr</div><div style="font-size:11px;color:var(--gray-600)">Including equipment levy</div></div>
+              <div style="padding:12px;background:#f0fdf4;border-radius:8px;border-left:3px solid #1a4a1a"><div style="font-size:12px;font-weight:700;color:#1a4a1a">Automotive Eng. (CIAE)</div><div style="font-size:18px;font-weight:800;color:var(--primary)">€5,800/yr</div><div style="font-size:11px;color:var(--gray-600)">Including lab & workshop fees</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COURSES ===== -->
+    <div class="view" id="view-courses">
+      <div class="pt"><h1>Courses & Programs</h1><p>148 active courses across all colleges</p></div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Course Catalog</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Colleges</option><option>Ledra</option><option>Culinary Arts</option><option>Automotive</option></select>
+            <select style="padding:7px 10px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Levels</option><option>Undergraduate</option><option>Postgraduate</option><option>Diploma</option></select>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>Add Course</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr><th>Code</th><th>Course Name</th><th>Program</th><th>College</th><th>Credits</th><th>Lecturer</th><th>Students</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>BUS301</td><td>Business Law I</td><td>BA Business Admin</td><td>Ledra</td><td>6</td><td>Dr. E. Papadopoulos</td><td>35</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>ACC201</td><td>Financial Accounting</td><td>BA Business Admin</td><td>Ledra</td><td>6</td><td>Prof. M. Antoniou</td><td>38</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>CULI301</td><td>Advanced Gastronomy</td><td>BSc Culinary Arts</td><td>Culinary</td><td>8</td><td>Chef G. Pasolini</td><td>22</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>AUTO401</td><td>EV Diagnostics & Systems</td><td>BEng Automotive</td><td>Automotive</td><td>8</td><td>Dr. D. Stavrou</td><td>18</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>MBA501</td><td>EU Business Regulations</td><td>MBA</td><td>Ledra</td><td>6</td><td>Dr. E. Papadopoulos</td><td>18</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+              <tr><td>PAST201</td><td>Artisan Bread & Pastry</td><td>Diploma Pastry Arts</td><td>Culinary</td><td>6</td><td>Chef A. Bernard</td><td>16</td><td><span class="badge bs">Active</span></td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EXAMS ===== -->
+    <div class="view" id="view-exams">
+      <div class="pt"><h1>Examination Management</h1><p>April / May 2026 Final Examination Period</p></div>
+      <div class="g2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><h3>Create Exam Entry</h3></div>
+          <div class="card-body">
+            <div class="fr"><div class="fg"><label>Course</label><select><option>Select course...</option><option>Business Law I (BUS301)</option><option>Financial Accounting (ACC201)</option><option>Advanced Gastronomy (CULI301)</option></select></div><div class="fg"><label>College</label><select><option>Ledra College</option><option>Culinary Arts</option><option>Automotive</option></select></div></div>
+            <div class="fr"><div class="fg"><label>Exam Date</label><input type="date"></div><div class="fg"><label>Start Time</label><input type="time"></div></div>
+            <div class="fr"><div class="fg"><label>Duration</label><select><option>1 hour</option><option>1.5 hours</option><option>2 hours</option><option>2.5 hours</option><option>3 hours</option></select></div><div class="fg"><label>Venue</label><select><option>Exam Hall A (120 seats)</option><option>Exam Hall B (80 seats)</option><option>Exam Hall C (60 seats)</option><option>Lab L01</option></select></div></div>
+            <button class="btn btn-primary"><i class="fas fa-plus"></i>Add Exam</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Exam Period Summary</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8f9fc;border-radius:8px"><span style="font-size:13px;font-weight:600">Total Exams Scheduled</span><strong>86</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8f9fc;border-radius:8px"><span style="font-size:13px;font-weight:600">Exam Period</span><strong>21 Apr – 8 May 2026</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8f9fc;border-radius:8px"><span style="font-size:13px;font-weight:600">Venues Utilised</span><strong>4 halls</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#d1fae5;border-radius:8px"><span style="font-size:13px;font-weight:600;color:#065f46">Invigilators Assigned</span><strong style="color:#065f46">28 / 28 ✓</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Examination Timetable</h3><button class="btn btn-primary btn-sm"><i class="fas fa-share"></i>Publish to Students</button></div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr><th>Date</th><th>Time</th><th>Course Code</th><th>Course Name</th><th>College</th><th>Duration</th><th>Venue</th><th>Candidates</th><th>Invigilator</th></tr></thead>
+            <tbody>
+              <tr><td>21 Apr 2026</td><td>09:00</td><td>ACC201</td><td>Financial Accounting</td><td>Ledra</td><td>2.5 hrs</td><td>Hall A</td><td>38</td><td>Prof. Stavros</td></tr>
+              <tr><td>21 Apr 2026</td><td>14:00</td><td>CULI201</td><td>Food Science Fundamentals</td><td>Culinary</td><td>2 hrs</td><td>Hall B</td><td>22</td><td>Dr. Petrou</td></tr>
+              <tr><td>24 Apr 2026</td><td>09:00</td><td>BUS301</td><td>Business Law I</td><td>Ledra</td><td>3 hrs</td><td>Hall A</td><td>35</td><td>Dr. Andreou</td></tr>
+              <tr><td>24 Apr 2026</td><td>09:00</td><td>AUTO201</td><td>Engine Systems & Technology</td><td>Automotive</td><td>2.5 hrs</td><td>Hall C</td><td>24</td><td>Eng. Miltiadou</td></tr>
+              <tr><td>27 Apr 2026</td><td>14:00</td><td>MKT202</td><td>Marketing Principles</td><td>Ledra</td><td>2 hrs</td><td>Hall A</td><td>40</td><td>Dr. Georgiou</td></tr>
+              <tr><td>30 Apr 2026</td><td>09:00</td><td>AUTO401</td><td>EV Diagnostics & Systems</td><td>Automotive</td><td>3 hrs</td><td>Lab L01</td><td>18</td><td>Dr. Stavrou</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HR ===== -->
+    <div class="view" id="view-hr">
+      <div class="pt"><h1>HR Management</h1><p>Human resources for all colleges</p></div>
+      <div class="g3" style="margin-bottom:20px">
+        <div class="card" style="text-align:center;padding:24px"><div style="font-size:36px;margin-bottom:8px">📋</div><h4 style="color:var(--primary);margin-bottom:8px">Staff Appraisals</h4><p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">12 pending annual reviews</p><button class="btn btn-primary btn-sm">Manage</button></div>
+        <div class="card" style="text-align:center;padding:24px"><div style="font-size:36px;margin-bottom:8px">🔍</div><h4 style="color:var(--primary);margin-bottom:8px">Recruitment</h4><p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">4 open positions</p><button class="btn btn-primary btn-sm">View Positions</button></div>
+        <div class="card" style="text-align:center;padding:24px"><div style="font-size:36px;margin-bottom:8px">📅</div><h4 style="color:var(--primary);margin-bottom:8px">Leave Calendar</h4><p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">Manage all leave requests</p><button class="btn btn-primary btn-sm">View Calendar</button></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Pending Leave Requests</h3><span class="badge bw">8 Pending</span></div>
+        <div class="card-body" style="padding:0">
+          <table>
+            <thead><tr><th>Staff Member</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Cover</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>Dr. E. Papadopoulos</td><td>Annual Leave</td><td>14 Apr 2026</td><td>18 Apr 2026</td><td>5</td><td>Dr. Andreou</td><td><span class="badge bw">Pending</span></td><td><button class="btn btn-success btn-xs" style="background:var(--success);color:#fff">Approve</button> <button class="btn btn-danger btn-xs" style="margin-left:4px">Reject</button></td></tr>
+              <tr><td>Chef G. Pasolini</td><td>Conference Leave</td><td>20 Apr 2026</td><td>23 Apr 2026</td><td>4</td><td>Chef Bernard</td><td><span class="badge bw">Pending</span></td><td><button class="btn btn-success btn-xs" style="background:var(--success);color:#fff">Approve</button> <button class="btn btn-danger btn-xs" style="margin-left:4px">Reject</button></td></tr>
+              <tr><td>Dr. D. Stavrou</td><td>Sick Leave</td><td>29 Mar 2026</td><td>1 Apr 2026</td><td>4</td><td>TBC</td><td><span class="badge bw">Pending</span></td><td><button class="btn btn-success btn-xs" style="background:var(--success);color:#fff">Approve</button> <button class="btn btn-danger btn-xs" style="margin-left:4px">Reject</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div class="view" id="view-settings">
+      <div class="pt"><h1>System Settings</h1></div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-header"><h3>Institution Settings</h3></div>
+          <div class="card-body">
+            <div class="fg"><label>Institution Name</label><input type="text" value="Cyprus College Group"></div>
+            <div class="fg"><label>Academic Year</label><input type="text" value="2025/2026"></div>
+            <div class="fg"><label>Current Semester</label><select><option selected>Semester 2</option><option>Semester 1</option><option>Summer</option></select></div>
+            <div class="fg"><label>Default Language</label><select><option>English</option><option>Greek</option></select></div>
+            <div class="fg"><label>Time Zone</label><input type="text" value="Europe/Nicosia (EET UTC+2)"></div>
+            <button class="btn btn-primary"><i class="fas fa-save"></i>Save Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Notification Settings</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:500">Email — Fee Reminders</span><label style="cursor:pointer"><input type="checkbox" checked style="width:auto;margin-right:6px">Enabled</label></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:500">Email — Low Attendance Alerts</span><label style="cursor:pointer"><input type="checkbox" checked style="width:auto;margin-right:6px">Enabled</label></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:500">SMS — Urgent Notices</span><label style="cursor:pointer"><input type="checkbox" style="width:auto;margin-right:6px">Disabled</label></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:500">Portal — Exam Reminders</span><label style="cursor:pointer"><input type="checkbox" checked style="width:auto;margin-right:6px">Enabled</label></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:500">Weekly Reports to Admins</span><label style="cursor:pointer"><input type="checkbox" checked style="width:auto;margin-right:6px">Enabled</label></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:20px"><i class="fas fa-save"></i>Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUBS for remaining views -->
+    <div class="view" id="view-analytics"><div class="pt"><h1>Analytics & Reports</h1></div><div class="g2"><div class="card"><div class="card-header"><h3>Enrollment Trends</h3></div><div class="card-body"><div style="height:280px"><canvas id="trendChart"></canvas></div></div></div><div class="card"><div class="card-header"><h3>Grade Distribution</h3></div><div class="card-body"><div style="height:280px"><canvas id="gradeChart"></canvas></div></div></div></div></div>
+    <div class="view" id="view-enrollment"><div class="pt"><h1>Enrollment Management</h1></div><div class="card"><div class="card-header"><h3>New Student Enrollment Form</h3></div><div class="card-body"><div class="fr"><div class="fg"><label>First Name</label><input type="text" placeholder="First name"></div><div class="fg"><label>Last Name</label><input type="text" placeholder="Last name"></div></div><div class="fr"><div class="fg"><label>Date of Birth</label><input type="date"></div><div class="fg"><label>Nationality</label><input type="text" placeholder="Nationality"></div></div><div class="fr"><div class="fg"><label>Email</label><input type="email" placeholder="Email address"></div><div class="fg"><label>Phone</label><input type="tel" placeholder="+357..."></div></div><div class="fr"><div class="fg"><label>College</label><select><option>Ledra College</option><option>Culinary Arts</option><option>Automotive Engineering</option></select></div><div class="fg"><label>Program</label><select><option>Select program...</option><option>BA Business Administration</option><option>LLB Law</option><option>BSc Computer Science</option><option>BSc Culinary Arts</option><option>BEng Automotive Engineering</option></select></div></div><div class="fr"><div class="fg"><label>Student ID (auto-generated)</label><input type="text" placeholder="LC-2026-XXXX" readonly style="background:#f8f9fc"></div><div class="fg"><label>Entry Year</label><select><option>Year 1</option><option>Year 2</option><option>Year 3</option></select></div></div><button class="btn btn-primary"><i class="fas fa-user-plus"></i>Enroll Student</button></div></div></div>
+    <div class="view" id="view-timetable"><div class="pt"><h1>Timetable Management</h1></div><div class="card"><div class="card-header"><h3>Master Timetable — Semester 2, 2025/26</h3><div style="display:flex;gap:8px"><select style="padding:7px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Colleges</option></select><button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>Add Slot</button><button class="btn btn-outline btn-sm"><i class="fas fa-download"></i>Export PDF</button></div></div><div class="card-body" style="overflow-x:auto"><table><thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead><tbody><tr><td>08:00–10:00</td><td style="background:#dbeafe;font-size:12px">BUS301 — Room A204<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td><td style="background:#d1fae5;font-size:12px">CULI301 — Kitchen Lab 1<br><span style="color:var(--gray-600)">Chef Pasolini</span></td><td style="background:#dbeafe;font-size:12px">BUS301 — Room A204<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td><td style="background:#ede9fe;font-size:12px">AUTO401 — Workshop A<br><span style="color:var(--gray-600)">Dr. Stavrou</span></td><td></td></tr><tr><td>10:00–12:00</td><td></td><td style="background:#fef3c7;font-size:12px">ACC201 — Room B105<br><span style="color:var(--gray-600)">Prof. Antoniou</span></td><td style="background:#ede9fe;font-size:12px">AUTO201 — Workshop A<br><span style="color:var(--gray-600)">Eng. Miltiadou</span></td><td style="background:#fef3c7;font-size:12px">ACC201 — Room B105<br><span style="color:var(--gray-600)">Prof. Antoniou</span></td><td style="background:#fee2e2;font-size:12px">MBA501 — Room A101<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td></tr><tr><td>12:00–14:00</td><td style="background:#ede9fe;font-size:12px">BUS401 — Room B110<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td><td></td><td></td><td style="background:#ede9fe;font-size:12px">BUS401 — Room B110<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td><td style="background:#d1fae5;font-size:12px">NUTR301 — Lab N1<br><span style="color:var(--gray-600)">Dr. Charalambous</span></td></tr><tr><td>14:00–16:00</td><td style="background:#f0fdf4;font-size:12px">LLB301 — Room C201<br><span style="color:var(--gray-600)">Dr. Papadopoulos</span></td><td style="background:#fee2e2;font-size:12px">MKT202 — Room C302<br><span style="color:var(--gray-600)">Dr. Georgiou</span></td><td style="background:#fee2e2;font-size:12px">MKT202 — Room C302<br><span style="color:var(--gray-600)">Dr. Georgiou</span></td><td style="background:#fef3c7;font-size:12px">HRM301 — Room D201<br><span style="color:var(--gray-600)">Prof. Charalambous</span></td><td style="background:#ede9fe;font-size:12px">AUTO401 — Workshop A<br><span style="color:var(--gray-600)">Dr. Stavrou</span></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-calendar"><div class="pt"><h1>Academic Calendar</h1></div><div class="card"><div class="card-header"><h3>AY 2025/26 Key Dates</h3></div><div class="card-body" style="padding:0"><table><thead><tr><th>Date</th><th>Event</th><th>Affects</th><th>Type</th></tr></thead><tbody><tr><td>22 Sep 2025</td><td>Semester 1 Start</td><td>All Colleges</td><td><span class="badge bi">Academic</span></td></tr><tr><td>24–25 Dec 2025</td><td>Christmas Break</td><td>All Colleges</td><td><span class="badge bg">Holiday</span></td></tr><tr><td>19 Jan 2026</td><td>Semester 2 Start</td><td>All Colleges</td><td><span class="badge bi">Academic</span></td></tr><tr><td>31 Mar 2026</td><td>Fee Payment Deadline (Sem 2)</td><td>All Colleges</td><td><span class="badge bw">Finance</span></td></tr><tr><td>5 Apr 2026</td><td>Course Registration Deadline</td><td>All Colleges</td><td><span class="badge bi">Academic</span></td></tr><tr><td>18 Apr 2026</td><td>Easter Break</td><td>All Colleges</td><td><span class="badge bg">Holiday</span></td></tr><tr><td>21 Apr – 8 May 2026</td><td>Final Examination Period</td><td>All Colleges</td><td><span class="badge bd">Exams</span></td></tr><tr><td>12 Jun 2026</td><td>Results Publication</td><td>All Colleges</td><td><span class="badge bi">Academic</span></td></tr><tr><td>27 Jun 2026</td><td>Graduation Ceremony</td><td>All Colleges</td><td><span class="badge bs">Ceremony</span></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-library"><div class="pt"><h1>Library Management</h1></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-book" style="color:#1d4ed8"></i></div><div><div class="kpi-val">12,400</div><div class="kpi-lbl">Total Resources</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-book-open" style="color:#065f46"></i></div><div><div class="kpi-val">840</div><div class="kpi-lbl">Currently Loaned</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-exclamation" style="color:#991b1b"></i></div><div><div class="kpi-val">42</div><div class="kpi-lbl">Overdue Returns</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#ede9fe"><i class="fas fa-laptop" style="color:#5b21b6"></i></div><div><div class="kpi-val">8,200</div><div class="kpi-lbl">Digital Resources</div></div></div></div><div class="card"><div class="card-header"><h3>Overdue Returns — Send Reminders</h3><button class="btn btn-danger btn-sm"><i class="fas fa-paper-plane"></i>Send All Reminders</button></div><div class="card-body" style="padding:0"><table><thead><tr><th>Student</th><th>Book/Resource</th><th>Due Date</th><th>Days Overdue</th><th>Fine (€0.50/day)</th></tr></thead><tbody><tr><td>Andreas Kyriakou</td><td>Marketing Management — Kotler</td><td>28 Mar 2026</td><td style="color:var(--danger);font-weight:700">0</td><td>€0.00</td></tr><tr><td>Petros Andreou</td><td>Financial Accounting — Harrison</td><td>14 Mar 2026</td><td style="color:var(--danger);font-weight:700">14</td><td>€7.00</td></tr><tr><td>Maria Ioannou</td><td>Principles of Management Law — Reed</td><td>7 Mar 2026</td><td style="color:var(--danger);font-weight:700">21</td><td>€10.50</td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-accommodation"><div class="pt"><h1>Accommodation Management</h1></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-bed" style="color:#1d4ed8"></i></div><div><div class="kpi-val">480</div><div class="kpi-lbl">Total Rooms</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-check" style="color:#065f46"></i></div><div><div class="kpi-val">412</div><div class="kpi-lbl">Occupied</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-door-open" style="color:#92400e"></i></div><div><div class="kpi-val">68</div><div class="kpi-lbl">Available</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#fee2e2"><i class="fas fa-tools" style="color:#991b1b"></i></div><div><div class="kpi-val">8</div><div class="kpi-lbl">Under Maintenance</div></div></div></div><div class="card"><div class="card-header"><h3>Halls of Residence</h3></div><div class="card-body" style="padding:0"><table><thead><tr><th>Hall</th><th>Location</th><th>Total Rooms</th><th>Occupied</th><th>Available</th><th>Monthly Rate</th><th>Status</th></tr></thead><tbody><tr><td>Block A — Standard</td><td>Ledra Campus</td><td>80</td><td>78</td><td>2</td><td>€280</td><td><span class="badge bs">Operational</span></td></tr><tr><td>Block B — En-Suite</td><td>Ledra Campus</td><td>120</td><td>118</td><td>2</td><td>€350</td><td><span class="badge bs">Operational</span></td></tr><tr><td>Block C — En-Suite</td><td>Ledra Campus</td><td>120</td><td>104</td><td>16</td><td>€350</td><td><span class="badge bs">Operational</span></td></tr><tr><td>CSCA Residence</td><td>CSCA Campus</td><td>80</td><td>68</td><td>12</td><td>€320</td><td><span class="badge bs">Operational</span></td></tr><tr><td>CIAE Halls</td><td>Strovolos</td><td>80</td><td>44</td><td>36</td><td>€280</td><td><span class="badge bs">Operational</span></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-events"><div class="pt"><h1>Events Management</h1></div><div class="card" style="margin-bottom:20px"><div class="card-header"><h3>Create New Event</h3></div><div class="card-body"><div class="fr"><div class="fg"><label>Event Name</label><input type="text" placeholder="Event name..."></div><div class="fg"><label>College</label><select><option>All Colleges</option><option>Ledra College</option><option>Culinary Arts</option><option>Automotive</option></select></div></div><div class="fr"><div class="fg"><label>Date</label><input type="date"></div><div class="fg"><label>Venue</label><input type="text" placeholder="Venue..."></div></div><div class="fg"><label>Description</label><textarea placeholder="Event description..."></textarea></div><button class="btn btn-primary"><i class="fas fa-plus"></i>Create Event</button></div></div><div class="card"><div class="card-header"><h3>Upcoming Events</h3></div><div class="card-body" style="padding:0"><table><thead><tr><th>Event</th><th>Date</th><th>Location</th><th>Organiser</th><th>Registered</th><th>Status</th></tr></thead><tbody><tr><td>Spring Career Fair 2026</td><td>15 Apr 2026</td><td>Main Auditorium</td><td>Career Services</td><td>248</td><td><span class="badge bi">Upcoming</span></td></tr><tr><td>Culinary Arts Exhibition</td><td>22 Apr 2026</td><td>CSCA Exhibition Hall</td><td>CSCA Faculty</td><td>120</td><td><span class="badge bi">Upcoming</span></td></tr><tr><td>EV Showcase — CIAE</td><td>8 May 2026</td><td>CIAE Forecourt</td><td>CIAE Engineering Dept.</td><td>85</td><td><span class="badge bg">Planning</span></td></tr><tr><td>Graduation Ceremony 2026</td><td>27 Jun 2026</td><td>Filoxenia Conference Centre</td><td>Academic Affairs</td><td>642</td><td><span class="badge bg">Planning</span></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-communications"><div class="pt"><h1>Communications</h1><p>Send announcements, emails, and notices to students and staff</p></div><div class="card"><div class="card-header"><h3>New Communication</h3></div><div class="card-body"><div class="fr"><div class="fg"><label>Recipients</label><select><option>All Students — All Colleges</option><option>All Staff</option><option>Ledra College Students</option><option>Culinary Arts Students</option><option>Automotive Students</option><option>Year 1 Students</option><option>Students with Outstanding Fees</option></select></div><div class="fg"><label>Channel</label><select><option>Portal Announcement</option><option>Email</option><option>Email + Portal</option><option>SMS (urgent only)</option></select></div></div><div class="fg"><label>Subject / Title</label><input type="text" placeholder="Announcement title..."></div><div class="fg"><label>Message</label><textarea placeholder="Write your message here..." style="height:140px"></textarea></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary"><i class="fas fa-paper-plane"></i>Send Now</button><button class="btn btn-outline"><i class="fas fa-clock"></i>Schedule</button><button class="btn btn-outline"><i class="fas fa-eye"></i>Preview</button></div></div></div></div>
+    <div class="view" id="view-scholarships"><div class="pt"><h1>Scholarships & Financial Aid</h1></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-icon" style="background:#d1fae5"><i class="fas fa-award" style="color:#065f46"></i></div><div><div class="kpi-val">124</div><div class="kpi-lbl">Active Scholarships</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#dbeafe"><i class="fas fa-euro-sign" style="color:#1d4ed8"></i></div><div><div class="kpi-val">€186K</div><div class="kpi-lbl">Total Aid Disbursed YTD</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#fef3c7"><i class="fas fa-file-alt" style="color:#92400e"></i></div><div><div class="kpi-val">38</div><div class="kpi-lbl">Applications Pending</div></div></div><div class="kpi-card"><div class="kpi-icon" style="background:#ede9fe"><i class="fas fa-handshake" style="color:#5b21b6"></i></div><div><div class="kpi-val">8</div><div class="kpi-lbl">Partner Scholarships</div></div></div></div><div class="card"><div class="card-header"><h3>Scholarship Programs</h3><button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>New Scholarship</button></div><div class="card-body" style="padding:0"><table><thead><tr><th>Scholarship Name</th><th>Amount</th><th>Criteria</th><th>Recipients</th><th>Budget</th><th>Status</th></tr></thead><tbody><tr><td>Academic Excellence Award</td><td>€1,000/yr</td><td>GPA ≥ 3.5</td><td>45</td><td>€45,000</td><td><span class="badge bs">Open</span></td></tr><tr><td>Needs-Based Bursary</td><td>€500–€2,000</td><td>Financial hardship</td><td>38</td><td>€52,000</td><td><span class="badge bs">Open</span></td></tr><tr><td>International Student Grant</td><td>€800/yr</td><td>Non-EU applicants</td><td>22</td><td>€17,600</td><td><span class="badge bs">Open</span></td></tr><tr><td>Sports Excellence</td><td>€750/yr</td><td>Varsity athlete</td><td>12</td><td>€9,000</td><td><span class="badge bs">Open</span></td></tr><tr><td>Culinary Arts Talent Award</td><td>Full Tuition</td><td>CSCA only · Portfolio</td><td>3</td><td>€18,600</td><td><span class="badge bi">Applications Closed</span></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-roles"><div class="pt"><h1>Roles & Permissions</h1></div><div class="card"><div class="card-header"><h3>System Roles</h3><button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>Add Role</button></div><div class="card-body" style="padding:0"><table><thead><tr><th>Role</th><th>Users</th><th>Permissions</th><th>Actions</th></tr></thead><tbody><tr><td><strong>System Administrator</strong></td><td>3</td><td>Full access — all modules</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>Registrar</strong></td><td>5</td><td>Students, Enrollment, Transcripts, Exams</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>Finance Officer</strong></td><td>6</td><td>Fees, Payroll, Accounting, Reports</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>HR Officer</strong></td><td>4</td><td>Staff, Leave, Recruitment, Payroll</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>Academic Dean</strong></td><td>3</td><td>Students, Courses, Curriculum, Grades, Reports</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>Faculty / Lecturer</strong></td><td>248</td><td>My Courses, Grades, Attendance, Materials</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr><tr><td><strong>Student</strong></td><td>4823</td><td>Own records only</td><td><button class="btn btn-outline btn-xs">Edit</button></td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-audit"><div class="pt"><h1>Audit Log</h1></div><div class="card"><div class="card-header"><h3>System Activity Log</h3><div style="display:flex;gap:8px"><input type="date" style="padding:7px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><select style="padding:7px;border:2px solid var(--gray-200);border-radius:7px;font-size:12px;outline:none"><option>All Actions</option><option>Login</option><option>Data Change</option><option>Export</option></select><button class="btn btn-outline btn-sm"><i class="fas fa-download"></i>Export</button></div></div><div class="card-body" style="padding:0"><table><thead><tr><th>Timestamp</th><th>User</th><th>Role</th><th>Action</th><th>Module</th><th>IP Address</th></tr></thead><tbody><tr><td>28 Mar 2026 09:14</td><td>G. Antoniou</td><td>Admin</td><td>Login</td><td>System</td><td>192.168.1.10</td></tr><tr><td>28 Mar 2026 09:16</td><td>G. Antoniou</td><td>Admin</td><td>View Dashboard</td><td>Dashboard</td><td>192.168.1.10</td></tr><tr><td>28 Mar 2026 08:55</td><td>Dr. E. Papadopoulos</td><td>Lecturer</td><td>Upload Material</td><td>Courses</td><td>192.168.1.42</td></tr><tr><td>28 Mar 2026 08:42</td><td>A. Kyriakou (Student)</td><td>Student</td><td>Fee Payment</td><td>Finance</td><td>88.150.22.14</td></tr><tr><td>28 Mar 2026 08:30</td><td>Anna Kyriakou</td><td>Registrar</td><td>Export Grade Report</td><td>Grades</td><td>192.168.1.28</td></tr></tbody></table></div></div></div>
+    <div class="view" id="view-interviews"><div class="pt"><h1>Admissions Interviews</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Interview scheduling and tracking for applicants invited for assessment.</p></div></div></div>
+    <div class="view" id="view-student-records"><div class="pt"><h1>Student Records</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Secure, comprehensive student academic records management.</p></div></div></div>
+    <div class="view" id="view-disciplinary"><div class="pt"><h1>Disciplinary Records</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Manage disciplinary cases, hearings, and outcomes across all colleges.</p></div></div></div>
+    <div class="view" id="view-curriculum"><div class="pt"><h1>Curriculum Management</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Design and maintain program curricula, credit structures, and learning outcomes.</p></div></div></div>
+    <div class="view" id="view-accounting"><div class="pt"><h1>Accounting</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">General ledger, P&L, balance sheet, and budget management.</p></div></div></div>
+    <div class="view" id="view-procurement"><div class="pt"><h1>Procurement</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Purchase orders, supplier management, and asset procurement.</p></div></div></div>
+    <div class="view" id="view-recruitment"><div class="pt"><h1>Recruitment</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Post vacancies, manage applications, and onboard new staff.</p></div></div></div>
+    <div class="view" id="view-leave"><div class="pt"><h1>Leave Management</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Approve, track and report on all staff leave requests across colleges.</p></div></div></div>
+    <div class="view" id="view-documents"><div class="pt"><h1>Document Management</h1></div><div class="card"><div class="card-body"><p style="color:var(--gray-600)">Manage official documents, policies, templates, and certificates.</p></div></div></div>
+
+  </div><!-- /content -->
+</div><!-- /main-wrap -->
+
+<script>
+// NAV
+function sv(id,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const view=document.getElementById('view-'+id);
+  if(view)view.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const titles={dashboard:'Dashboard',analytics:'Analytics & Reports',applications:'Applications',enrollment:'Enrollment',interviews:'Interviews',students:'Students',staff:'Staff Directory','student-records':'Student Records',disciplinary:'Disciplinary',courses:'Courses & Programs',curriculum:'Curriculum',timetable:'Timetable',calendar:'Academic Calendar',exams:'Examinations',hr:'HR Management',payroll:'Payroll',leave:'Leave Management',recruitment:'Recruitment',fees:'Fees & Payments',scholarships:'Scholarships',accounting:'Accounting',procurement:'Procurement',library:'Library',accommodation:'Accommodation',events:'Events',communications:'Communications',documents:'Documents',settings:'Settings',roles:'Roles & Permissions',audit:'Audit Log'};
+  const t=titles[id]||id;
+  document.getElementById('page-title').textContent=t;
+  document.getElementById('breadcrumb').innerHTML=`<i class="fas fa-home"></i><i class="fas fa-chevron-right"></i><span>${t}</span>`;
+  window.scrollTo(0,0);
+  if(id==='analytics'){initAnalyticsCharts();}
+}
+
+// CHARTS
+window.addEventListener('load',()=>{
+  // Enrollment chart
+  const ec=document.getElementById('enrollChart');
+  if(ec){new Chart(ec,{type:'bar',data:{labels:['Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25'],datasets:[{label:'Ledra',data:[1820,1841,1850,1860,2800,2820,2841],backgroundColor:'#1a3a6b'},{label:'Culinary',data:[620,650,680,700,1080,1090,1104],backgroundColor:'#8b2e2e'},{label:'Automotive',data:[450,480,500,520,840,860,878],backgroundColor:'#1a4a1a'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{x:{stacked:false},y:{beginAtZero:false,min:0}}}});}
+  // Split chart
+  const sc=document.getElementById('splitChart');
+  if(sc){new Chart(sc,{type:'doughnut',data:{labels:['Ledra College','Culinary Arts','Automotive Eng.'],datasets:[{data:[2841,1104,878],backgroundColor:['#1a3a6b','#8b2e2e','#1a4a1a'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
+  // Fee chart
+  const fc=document.getElementById('feeChart');
+  if(fc){new Chart(fc,{type:'line',data:{labels:['Sep','Oct','Nov','Dec','Jan','Feb','Mar'],datasets:[{label:'Collected (€K)',data:[820,640,480,380,1200,960,820],borderColor:'#27ae60',backgroundColor:'rgba(39,174,96,.1)',fill:true,tension:.4},{label:'Target (€K)',data:[900,750,600,500,1300,1050,900],borderColor:'#1a3a6b',borderDash:[6,3],tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}}}});}
+});
+function initAnalyticsCharts(){
+  setTimeout(()=>{
+    const tc=document.getElementById('trendChart');
+    if(tc&&!tc.chart){const ch=new Chart(tc,{type:'line',data:{labels:['2020','2021','2022','2023','2024','2025','2026'],datasets:[{label:'Total Enrollment',data:[3200,3400,3600,3900,4200,4600,4823],borderColor:'#1a3a6b',backgroundColor:'rgba(26,58,107,.1)',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false}});tc.chart=ch;}
+    const gc=document.getElementById('gradeChart');
+    if(gc&&!gc.chart){const ch=new Chart(gc,{type:'bar',data:{labels:['A+','A','A-','B+','B','B-','C','D','F'],datasets:[{label:'Students',data:[180,420,580,720,840,560,380,220,80],backgroundColor:['#059669','#27ae60','#10b981','#3498db','#2563eb','#7c3aed','#f39c12','#e74c3c','#991b1b']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});gc.chart=ch;}
+  },100);
+}
+</script>
+</body>
+</html>
