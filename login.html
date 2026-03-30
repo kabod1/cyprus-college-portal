@@ -3,284 +3,519 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Login | Cyprus College Group</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Sign In | Cyprus College Group</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root{--primary:#1a3a6b;--gold:#c9a227;--danger:#e74c3c;}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{
-      font-family:'Inter',sans-serif;
-      min-height:100vh;
-      background:linear-gradient(135deg,#0a1838 0%,#1a3a6b 60%,#0f2347 100%);
-      display:flex;align-items:center;justify-content:center;
-      position:relative;overflow:hidden;
+    :root {
+      --navy: #0f2347;
+      --blue: #1a3a6b;
+      --gold: #c9a227;
+      --gold-light: #f0d06a;
+      --danger: #e74c3c;
+      --text: #2c3e50;
+      --gray: #6c757d;
+      --border: #e9ecef;
     }
-    .bg-circles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
-    .circle{position:absolute;border-radius:50%;background:rgba(201,162,39,.05);}
-    .circle-1{width:600px;height:600px;top:-200px;right:-200px;}
-    .circle-2{width:400px;height:400px;bottom:-100px;left:-100px;background:rgba(42,82,152,.1);}
-    .circle-3{width:200px;height:200px;top:50%;left:20%;}
-    .login-wrapper{
-      display:flex;max-width:960px;width:100%;margin:20px;
-      border-radius:24px;overflow:hidden;
-      box-shadow:0 40px 80px rgba(0,0,0,.5);
-      position:relative;z-index:1;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      background: #f0f4f8;
     }
-    /* Left Panel */
-    .login-left{
-      flex:1;background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-right:none;
-      padding:60px 48px;color:#fff;
-      display:flex;flex-direction:column;justify-content:space-between;
-      backdrop-filter:blur(20px);
+
+    /* ── Left Branding Panel ─────────────────────────── */
+    .brand-panel {
+      width: 480px;
+      flex-shrink: 0;
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 48px;
     }
-    .login-logo{display:flex;align-items:center;gap:14px;margin-bottom:48px;}
-    .logo-badge{
-      width:52px;height:52px;background:var(--gold);border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
-      color:#0f2347;flex-shrink:0;
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,162,39,.15) 0%, transparent 70%);
+      top: -100px; right: -150px;
     }
-    .logo-text h1{font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
-    .logo-text p{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;}
-    .left-title{font-family:'Playfair Display',serif;font-size:34px;line-height:1.3;margin-bottom:16px;}
-    .left-title span{color:var(--gold);}
-    .left-subtitle{font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:40px;}
-    .portal-links{display:flex;flex-direction:column;gap:12px;}
-    .portal-link{
-      display:flex;align-items:center;gap:14px;
-      padding:14px 18px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.1);
-      cursor:pointer;transition:all .2s;
+    .brand-panel::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(42,82,152,.3) 0%, transparent 70%);
+      bottom: -80px; left: -60px;
     }
-    .portal-link:hover{background:rgba(255,255,255,.08);border-color:rgba(201,162,39,.4);}
-    .portal-link.selected{background:rgba(201,162,39,.12);border-color:var(--gold);}
-    .portal-icon{
-      width:40px;height:40px;border-radius:10px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:18px;flex-shrink:0;
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 64px;
+      position: relative;
+      z-index: 1;
     }
-    .portal-link h4{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;}
-    .portal-link p{font-size:12px;color:rgba(255,255,255,.5);}
-    .left-footer{font-size:12px;color:rgba(255,255,255,.3);margin-top:40px;}
-    /* Right Panel - Login Form */
-    .login-right{
-      width:400px;background:#fff;
-      padding:60px 48px;
-      display:flex;flex-direction:column;justify-content:center;
+    .brand-crest {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      color: var(--navy);
+      box-shadow: 0 4px 20px rgba(201,162,39,.4);
     }
-    .login-right h2{
-      font-family:'Playfair Display',serif;font-size:28px;
-      color:var(--primary);margin-bottom:8px;
+    .brand-name h1 { font-size: 17px; font-weight: 700; color: #fff; }
+    .brand-name p { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+
+    .brand-hero { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .brand-hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px; line-height: 1.2;
+      color: #fff; margin-bottom: 20px;
     }
-    .login-right p{font-size:14px;color:#6c757d;margin-bottom:36px;}
-    .form-group{margin-bottom:20px;}
-    .form-group label{display:block;font-size:13px;font-weight:600;color:var(--primary);margin-bottom:8px;}
-    .input-wrap{position:relative;}
-    .input-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#adb5bd;font-size:15px;}
-    .input-wrap input,.input-wrap select{
-      width:100%;padding:13px 14px 13px 42px;
-      border:2px solid #e9ecef;border-radius:10px;
-      font-size:14px;font-family:'Inter',sans-serif;outline:none;
-      color:#2c3e50;transition:border-color .2s;
+    .brand-hero h2 em { color: var(--gold); font-style: italic; }
+    .brand-hero p {
+      font-size: 15px; line-height: 1.8;
+      color: rgba(255,255,255,.6);
+      max-width: 340px;
+      margin-bottom: 48px;
     }
-    .input-wrap input:focus,.input-wrap select:focus{border-color:var(--primary);}
-    .pw-toggle{
-      position:absolute;right:14px;top:50%;transform:translateY(-50%);
-      cursor:pointer;color:#adb5bd;background:none;border:none;font-size:15px;
+
+    .portal-cards { display: flex; flex-direction: column; gap: 10px; }
+    .portal-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      cursor: pointer; transition: all .25s;
+      background: rgba(255,255,255,.03);
     }
-    .login-btn{
-      width:100%;padding:14px;background:var(--primary);color:#fff;
-      border:none;border-radius:10px;font-size:16px;font-weight:700;
-      cursor:pointer;transition:all .3s;margin-top:8px;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      font-family:'Inter',sans-serif;
+    .portal-card:hover { background: rgba(255,255,255,.07); border-color: rgba(201,162,39,.3); }
+    .portal-card.active { background: rgba(201,162,39,.12); border-color: rgba(201,162,39,.5); }
+    .portal-card-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
     }
-    .login-btn:hover{background:#0f2347;box-shadow:0 8px 24px rgba(26,58,107,.4);}
-    .demo-box{
-      background:#f8f9fc;border:1px solid #e9ecef;border-radius:10px;
-      padding:16px;margin:20px 0;
+    .portal-card h4 { font-size: 13px; font-weight: 600; color: #fff; }
+    .portal-card span { font-size: 11px; color: rgba(255,255,255,.45); }
+    .portal-card .arrow { margin-left: auto; color: rgba(255,255,255,.2); transition: color .2s; }
+    .portal-card.active .arrow { color: var(--gold); }
+
+    .brand-footer {
+      position: relative; z-index: 1;
+      font-size: 12px; color: rgba(255,255,255,.25);
+      margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      display: flex; justify-content: space-between;
     }
-    .demo-box h5{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
-    .demo-creds{display:flex;flex-direction:column;gap:6px;}
-    .cred-row{
-      display:flex;align-items:center;gap:8px;
-      font-size:12px;color:#495057;
+
+    /* ── Right Form Panel ────────────────────────────── */
+    .form-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
     }
-    .cred-badge{
-      padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;
-      text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;
+    .form-box {
+      width: 100%; max-width: 420px;
     }
-    .divider{
-      display:flex;align-items:center;gap:12px;
-      color:#adb5bd;font-size:12px;margin:20px 0;
+    .form-greeting {
+      margin-bottom: 36px;
     }
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e9ecef;}
-    .back-link{
-      display:flex;align-items:center;gap:6px;
-      font-size:13px;color:var(--primary);font-weight:600;
-      margin-top:24px;justify-content:center;cursor:pointer;
+    .form-greeting .time-label {
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
     }
-    .back-link:hover{text-decoration:underline;}
-    .forgot-link{font-size:13px;color:var(--primary);font-weight:600;float:right;}
-    .forgot-link:hover{text-decoration:underline;}
-    .alert{
-      background:#fef2f2;border:1px solid #fecaca;color:var(--danger);
-      border-radius:8px;padding:12px 14px;font-size:13px;
-      display:none;margin-bottom:16px;
+    .form-greeting h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px; color: var(--navy);
+      margin-bottom: 6px;
     }
-    @media(max-width:700px){
-      .login-left{display:none;}
-      .login-right{width:100%;}
+    .form-greeting p { font-size: 14px; color: var(--gray); }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 13px;
+      font-weight: 600; color: var(--text);
+      margin-bottom: 7px;
+    }
+    .input-field {
+      position: relative;
+    }
+    .input-field i.icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: #b0bec5; font-size: 14px;
+    }
+    .input-field input, .input-field select {
+      width: 100%; padding: 13px 14px 13px 40px;
+      border: 2px solid var(--border); border-radius: 10px;
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      color: var(--text); outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+    }
+    .input-field input:focus, .input-field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(26,58,107,.08);
+    }
+    .input-field .eye-btn {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: #b0bec5; padding: 4px; font-size: 14px;
+    }
+
+    .form-extras {
+      display: flex; justify-content: flex-end;
+      margin-top: -10px; margin-bottom: 18px;
+    }
+    .forgot-link {
+      font-size: 13px; color: var(--blue);
+      font-weight: 600; cursor: pointer; text-decoration: none;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-signin {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--navy));
+      color: #fff; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all .3s; box-shadow: 0 4px 16px rgba(26,58,107,.25);
+    }
+    .btn-signin:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,58,107,.35); }
+    .btn-signin:active { transform: translateY(0); }
+    .btn-signin:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+    .btn-signin .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .alert-error {
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; padding: 12px 16px;
+      color: #b91c1c; font-size: 13px;
+      display: none; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .alert-error.show { display: flex; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: #cbd5e1; font-size: 12px;
+      margin: 24px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .demo-panel {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+    }
+    .demo-panel h5 {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .8px;
+      color: var(--gray); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .demo-rows { display: flex; flex-direction: column; gap: 7px; }
+    .demo-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px;
+      cursor: pointer; transition: background .15s;
+      border: 1px solid transparent;
+    }
+    .demo-row:hover { background: #fff; border-color: var(--border); }
+    .demo-tag {
+      padding: 2px 8px; border-radius: 20px;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .4px;
+      flex-shrink: 0; min-width: 60px; text-align: center;
+    }
+    .demo-email { font-size: 12px; color: var(--gray); flex: 1; }
+    .demo-hint { font-size: 10px; color: #b0bec5; }
+
+    .back-home {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--blue); font-weight: 600;
+      text-decoration: none; margin-top: 28px;
+      justify-content: center; cursor: pointer;
+    }
+    .back-home:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .brand-panel { display: none; }
+      .form-panel { padding: 24px; }
     }
   </style>
 </head>
 <body>
-<div class="bg-circles">
-  <div class="circle circle-1"></div>
-  <div class="circle circle-2"></div>
-  <div class="circle circle-3"></div>
-</div>
-<div class="login-wrapper">
-  <!-- Left -->
-  <div class="login-left">
-    <div>
-      <div class="login-logo">
-        <div class="logo-badge">CCG</div>
-        <div class="logo-text">
-          <h1>Cyprus College Group</h1>
-          <p>Academic Portal</p>
-        </div>
-      </div>
-      <h2 class="left-title">Welcome to the <span>Unified Academic Portal</span></h2>
-      <p class="left-subtitle">Access all academic services, records, and administrative functions for Ledra College, School of Culinary Arts, and School of Automotive Engineering.</p>
-      <div class="portal-links">
-        <div class="portal-link selected" onclick="setRole('student',this)">
-          <div class="portal-icon" style="background:rgba(26,58,107,.4)"><i class="fas fa-user-graduate" style="color:#7eb3f0"></i></div>
-          <div>
-            <h4>Student Portal</h4>
-            <p>Courses, grades, schedule, fees & more</p>
-          </div>
-        </div>
-        <div class="portal-link" onclick="setRole('staff',this)">
-          <div class="portal-icon" style="background:rgba(39,174,96,.2)"><i class="fas fa-chalkboard-teacher" style="color:#27ae60"></i></div>
-          <div>
-            <h4>Faculty & Staff Portal</h4>
-            <p>Courses, gradebook, attendance, leave</p>
-          </div>
-        </div>
-        <div class="portal-link" onclick="setRole('admin',this)">
-          <div class="portal-icon" style="background:rgba(201,162,39,.2)"><i class="fas fa-shield-alt" style="color:var(--gold)"></i></div>
-          <div>
-            <h4>Admin Portal</h4>
-            <p>Full institutional management</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="left-footer">
-      © 2026 Cyprus College Group · Nicosia, Cyprus<br>
-      EU Accredited Institution · CYQAA Certified
+
+<!-- Left Brand Panel -->
+<div class="brand-panel">
+  <div class="brand-logo">
+    <div class="brand-crest">CCG</div>
+    <div class="brand-name">
+      <h1>Cyprus College Group</h1>
+      <p>Unified Academic Portal</p>
     </div>
   </div>
 
-  <!-- Right -->
-  <div class="login-right">
-    <h2>Sign In</h2>
-    <p id="portal-desc">Signing in as <strong>Student</strong></p>
-    <div class="alert" id="login-alert"><i class="fas fa-exclamation-circle"></i> Invalid credentials. Please try again.</div>
+  <div class="brand-hero">
+    <h2>Your education,<br><em>all in one place.</em></h2>
+    <p>Ledra College, School of Culinary Arts, and School of Automotive Engineering — one portal for everything academic.</p>
+
+    <div class="portal-cards">
+      <div class="portal-card active" onclick="setPortal('student', this)">
+        <div class="portal-card-icon" style="background:rgba(59,130,246,.15)">
+          <i class="fas fa-user-graduate" style="color:#60a5fa"></i>
+        </div>
+        <div>
+          <h4>Student Portal</h4>
+          <span>Grades, schedule, fees, assignments</span>
+        </div>
+        <i class="fas fa-arrow-right arrow"></i>
+      </div>
+      <div class="portal-card" onclick="setPortal('staff', this)">
+        <div class="portal-card-icon" style="background:rgba(16,185,129,.15)">
+          <i class="fas fa-chalkboard-teacher" style="color:#34d399"></i>
+        </div>
+        <div>
+          <h4>Faculty & Staff</h4>
+          <span>Courses, gradebook, attendance, leave</span>
+        </div>
+        <i class="fas fa-arrow-right arrow"></i>
+      </div>
+      <div class="portal-card" onclick="setPortal('admin', this)">
+        <div class="portal-card-icon" style="background:rgba(201,162,39,.15)">
+          <i class="fas fa-shield-alt" style="color:var(--gold)"></i>
+        </div>
+        <div>
+          <h4>Administration</h4>
+          <span>Full institutional management</span>
+        </div>
+        <i class="fas fa-arrow-right arrow"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="brand-footer">
+    <span>© 2026 Cyprus College Group</span>
+    <span>CYQAA · City & Guilds · EQF Aligned</span>
+  </div>
+</div>
+
+<!-- Right Form Panel -->
+<div class="form-panel">
+  <div class="form-box">
+
+    <div class="form-greeting">
+      <div class="time-label">
+        <i class="fas fa-circle" style="font-size:7px"></i>
+        <span id="time-greeting">Good morning</span>
+      </div>
+      <h2>Welcome back.</h2>
+      <p id="portal-desc">Signing in as a <strong>Student</strong> — enter your credentials below.</p>
+    </div>
+
+    <div class="alert-error" id="error-alert" style="display:none">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="error-msg">Invalid email or password. Please try again.</span>
+    </div>
+
     <div class="form-group">
       <label>Email Address</label>
-      <div class="input-wrap">
-        <i class="fas fa-envelope"></i>
-        <input type="email" id="email-input" placeholder="username@ledra.ac.cy">
+      <div class="input-field">
+        <i class="icon fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="you@ledra.ac.cy" autocomplete="email">
       </div>
     </div>
+
     <div class="form-group">
-      <label>Password <a href="#" class="forgot-link">Forgot password?</a></label>
-      <div class="input-wrap">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="pw-input" placeholder="Enter your password">
-        <button class="pw-toggle" onclick="togglePw()"><i class="fas fa-eye" id="eye-icon"></i></button>
+      <label>Password</label>
+      <div class="input-field">
+        <i class="icon fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+        <button class="eye-btn" type="button" onclick="togglePw()">
+          <i class="fas fa-eye" id="eye-icon"></i>
+        </button>
       </div>
     </div>
-    <div class="form-group">
-      <label>Campus / College</label>
-      <div class="input-wrap">
-        <i class="fas fa-university"></i>
-        <select id="campus-select">
-          <option value="ledra">Ledra College</option>
-          <option value="culinary">School of Culinary Arts</option>
-          <option value="auto">School of Automotive Engineering</option>
-        </select>
-      </div>
+
+    <div class="form-extras">
+      <a class="forgot-link" href="#">Forgot password?</a>
     </div>
-    <button class="login-btn" onclick="doLogin()">
-      <i class="fas fa-sign-in-alt"></i>Sign In to Portal
+
+    <button class="btn-signin" id="signin-btn" onclick="doLogin()">
+      <div class="spinner" id="spinner"></div>
+      <i class="fas fa-sign-in-alt" id="signin-icon"></i>
+      <span id="signin-text">Sign In to Portal</span>
     </button>
 
-    <div class="divider">Demo Credentials</div>
-    <div class="demo-box">
-      <h5>Quick Access — Click to fill</h5>
-      <div class="demo-creds">
-        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('student@ledra.ac.cy','demo1234')">
-          <span class="cred-badge" style="background:#dbeafe;color:#1e40af">Student</span>
-          <span>student@ledra.ac.cy / demo1234</span>
+    <div class="divider">or try a demo account</div>
+
+    <div class="demo-panel">
+      <h5><i class="fas fa-flask"></i> Quick Demo Access — click any row</h5>
+      <div class="demo-rows">
+        <div class="demo-row" onclick="fillDemo('student@ledra.ac.cy','demo1234','student')">
+          <span class="demo-tag" style="background:#dbeafe;color:#1d4ed8">Student</span>
+          <span class="demo-email">student@ledra.ac.cy</span>
+          <span class="demo-hint">Ledra College</span>
         </div>
-        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('staff@ledra.ac.cy','demo1234')">
-          <span class="cred-badge" style="background:#d1fae5;color:#065f46">Faculty</span>
-          <span>staff@ledra.ac.cy / demo1234</span>
+        <div class="demo-row" onclick="fillDemo('student@saeautoeng.com','demo1234','student')">
+          <span class="demo-tag" style="background:#dbeafe;color:#1d4ed8">Student</span>
+          <span class="demo-email">student@saeautoeng.com</span>
+          <span class="demo-hint">SAE</span>
         </div>
-        <div class="cred-row" style="cursor:pointer" onclick="fillCreds('admin@ledra.ac.cy','demo1234')">
-          <span class="cred-badge" style="background:#fef3c7;color:#92400e">Admin</span>
-          <span>admin@ledra.ac.cy / demo1234</span>
+        <div class="demo-row" onclick="fillDemo('staff@ledra.ac.cy','demo1234','staff')">
+          <span class="demo-tag" style="background:#d1fae5;color:#065f46">Faculty</span>
+          <span class="demo-email">staff@ledra.ac.cy</span>
+          <span class="demo-hint">Ledra College</span>
+        </div>
+        <div class="demo-row" onclick="fillDemo('admin@ledra.ac.cy','demo1234','admin')">
+          <span class="demo-tag" style="background:#fef3c7;color:#92400e">Admin</span>
+          <span class="demo-email">admin@ledra.ac.cy</span>
+          <span class="demo-hint">Full access</span>
         </div>
       </div>
     </div>
-    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i>Back to Public Website</a>
+
+    <a href="index.html" class="back-home">
+      <i class="fas fa-arrow-left"></i> Back to public website
+    </a>
+
   </div>
 </div>
 
 <script>
-let selectedRole='student';
-function setRole(role,el){
-  selectedRole=role;
-  document.querySelectorAll('.portal-link').forEach(l=>l.classList.remove('selected'));
-  el.classList.add('selected');
-  const desc={student:'Student',staff:'Faculty / Staff',admin:'Administrator'};
-  document.getElementById('portal-desc').innerHTML=`Signing in as <strong>${desc[role]}</strong>`;
-}
-function togglePw(){
-  const inp=document.getElementById('pw-input');
-  const icon=document.getElementById('eye-icon');
-  inp.type=inp.type==='password'?'text':'password';
-  icon.className=inp.type==='password'?'fas fa-eye':'fas fa-eye-slash';
-}
-function fillCreds(email,pw){
-  document.getElementById('email-input').value=email;
-  document.getElementById('pw-input').value=pw;
-  if(email.startsWith('student')) setRole('student',document.querySelectorAll('.portal-link')[0]);
-  else if(email.startsWith('staff')) setRole('staff',document.querySelectorAll('.portal-link')[1]);
-  else setRole('admin',document.querySelectorAll('.portal-link')[2]);
-}
-function doLogin(){
-  const email=document.getElementById('email-input').value;
-  const pw=document.getElementById('pw-input').value;
-  const alert=document.getElementById('login-alert');
-  if(!email||!pw){alert.style.display='block';return;}
-  // Demo: route by email or selected role
-  const valid={'student@ledra.ac.cy':'demo1234','staff@ledra.ac.cy':'demo1234','admin@ledra.ac.cy':'demo1234'};
-  if(valid[email]&&valid[email]===pw){
-    const routes={'student@ledra.ac.cy':'student/index.html','staff@ledra.ac.cy':'staff/index.html','admin@ledra.ac.cy':'admin/index.html'};
-    const roleRoutes={'student':'student/index.html','staff':'staff/index.html','admin':'admin/index.html'};
-    window.location.href=routes[email]||roleRoutes[selectedRole];
-  } else {
-    alert.style.display='block';
+  // Greeting
+  const h = new Date().getHours();
+  document.getElementById('time-greeting').textContent =
+    h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+
+  let selectedPortal = 'student';
+
+  function setPortal(type, el) {
+    selectedPortal = type;
+    document.querySelectorAll('.portal-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    const labels = { student: 'Student', staff: 'Faculty / Staff member', admin: 'Administrator' };
+    document.getElementById('portal-desc').innerHTML =
+      `Signing in as a <strong>${labels[type]}</strong> — enter your credentials below.`;
   }
-}
-document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+  function togglePw() {
+    const inp = document.getElementById('password');
+    const icon = document.getElementById('eye-icon');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    icon.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  }
+
+  function fillDemo(email, pw, role) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pw;
+    const cards = document.querySelectorAll('.portal-card');
+    const idx = { student: 0, staff: 1, admin: 2 };
+    setPortal(role, cards[idx[role]]);
+    hideError();
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-alert');
+    document.getElementById('error-msg').textContent = msg;
+    el.style.display = 'flex';
+  }
+
+  function hideError() {
+    document.getElementById('error-alert').style.display = 'none';
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('signin-btn');
+    const spinner = document.getElementById('spinner');
+    const icon = document.getElementById('signin-icon');
+    const text = document.getElementById('signin-text');
+    btn.disabled = on;
+    spinner.style.display = on ? 'block' : 'none';
+    icon.style.display = on ? 'none' : 'block';
+    text.textContent = on ? 'Signing in…' : 'Sign In to Portal';
+  }
+
+  const API_BASE = 'https://college-portal-api-production.up.railway.app/api/v1';
+
+  async function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    hideError();
+
+    if (!email || !password) {
+      showError('Please enter both your email and password.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(API_BASE + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Invalid email or password');
+      }
+
+      const data = await res.json();
+      localStorage.setItem('cp_access_token', data.accessToken);
+      localStorage.setItem('cp_refresh_token', data.refreshToken);
+      localStorage.setItem('cp_user', JSON.stringify(data.user));
+
+      const role = data.user.role;
+      const routes = { student: 'student/index.html', staff: 'staff/index.html', admin: 'admin/index.html' };
+      window.location.href = routes[role] || 'student/index.html';
+
+    } catch (err) {
+      showError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  // If already logged in, redirect
+  const existing = localStorage.getItem('cp_user');
+  if (existing) {
+    try {
+      const u = JSON.parse(existing);
+      const token = localStorage.getItem('cp_access_token');
+      if (token && u?.role) {
+        const routes = { student: 'student/index.html', staff: 'staff/index.html', admin: 'admin/index.html' };
+        window.location.href = routes[u.role];
+      }
+    } catch {}
+  }
 </script>
 </body>
 </html>
