@@ -708,6 +708,11 @@ async function init(){
   currentUser = requireAuth();
   if(!currentUser) return;
 
+  // Normalise — API may return camelCase or snake_case depending on endpoint
+  if(!currentUser.first_name && currentUser.firstName) currentUser.first_name=currentUser.firstName;
+  if(!currentUser.last_name  && currentUser.lastName)  currentUser.last_name=currentUser.lastName;
+  if(!currentUser.college_id && currentUser.collegeId) currentUser.college_id=currentUser.collegeId;
+
   // Set greeting
   const h=new Date().getHours();
   document.getElementById('topbar-sub').textContent=greeting()+', '+currentUser.first_name+'!';

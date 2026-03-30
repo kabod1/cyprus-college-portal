@@ -487,6 +487,9 @@ async function init(){
   currentUser=requireAuth();
   if(!currentUser) return;
   if(currentUser.role!=='staff'&&currentUser.role!=='admin'){ window.location.href='../login.html'; return; }
+  if(!currentUser.first_name && currentUser.firstName) currentUser.first_name=currentUser.firstName;
+  if(!currentUser.last_name  && currentUser.lastName)  currentUser.last_name=currentUser.lastName;
+  if(!currentUser.college_id && currentUser.collegeId) currentUser.college_id=currentUser.collegeId;
   const av=initials(currentUser.first_name,currentUser.last_name);
   document.getElementById('sb-avatar').textContent=av;
   document.getElementById('tb-avatar').textContent=av;
