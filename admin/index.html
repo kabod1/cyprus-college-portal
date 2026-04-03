@@ -141,15 +141,38 @@
     .empty-state i{font-size:40px;opacity:.2;display:block;margin-bottom:14px;}
     .empty-state h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:5px;}
 
+    .menu-btn{
+      display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+      width:36px;height:36px;background:var(--bg);border:1px solid var(--border);
+      border-radius:8px;cursor:pointer;flex-shrink:0;margin-right:10px;
+    }
+    .menu-btn span{display:block;width:16px;height:2px;background:var(--muted);border-radius:2px;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+    .sidebar-overlay.show{display:block;}
+    .sidebar{transition:transform .3s ease;}
+
     @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:900px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}}
+    @media(max-width:900px){
+      .menu-btn{display:flex;}
+      .sidebar{transform:translateX(-100%);}
+      .sidebar.open{transform:translateX(0);}
+      .main{margin-left:0;}
+      .topbar{padding:0 16px;}
+      .tb-user .nm{display:none;}
+      .content{padding:20px 16px;}
+      .kpi-grid{grid-template-columns:1fr 1fr;}
+      .grid-2,.grid-3{grid-template-columns:1fr;}
+    }
   </style>
 </head>
 <body>
 <div class="toast-wrap" id="toasts"></div>
 
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sb-head">
     <div class="sb-brand">
       <div class="crest">CCG</div>
@@ -193,7 +216,10 @@
 <!-- MAIN -->
 <div class="main">
   <header class="topbar">
-    <div class="topbar-left">
+    <div class="topbar-left" style="display:flex;align-items:center;">
+      <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <div><h2 id="topbar-title">Dashboard</h2><p id="topbar-sub">Loading…</p></div>
     </div>
     <div class="topbar-right">
@@ -497,10 +523,20 @@ const VIEWS={
   'report-fees':{t:'Financial Reports',s:'Revenue and outstanding fees'},
 };
 
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
 function show(id,el){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
   if(el){ document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+  closeSidebar();
   const v=VIEWS[id]||{t:id,s:''};
   document.getElementById('topbar-title').textContent=v.t;
   document.getElementById('topbar-sub').textContent=v.s;
