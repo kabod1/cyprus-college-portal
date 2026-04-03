@@ -1,0 +1,50 @@
+{
+  "name": "Cyprus College Group Portal",
+  "short_name": "CCG Portal",
+  "description": "Ledra College unified academic portal — Student, Faculty & Admin access.",
+  "start_url": "/cyprus-college-portal/login.html",
+  "scope": "/cyprus-college-portal/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f2347",
+  "theme_color": "#0f2347",
+  "categories": ["education"],
+  "lang": "en-GB",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/social-card.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Cyprus College Group Portal"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Student Portal",
+      "short_name": "Students",
+      "url": "/cyprus-college-portal/student/index.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Faculty Portal",
+      "short_name": "Faculty",
+      "url": "/cyprus-college-portal/staff/index.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

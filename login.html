@@ -4,6 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In | Cyprus College Group</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f2347">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CCG Portal">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <!-- SEO -->
+  <meta name="description" content="Sign in to the Cyprus College Group academic portal — Ledra College student, faculty, and admin access.">
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kabod1.github.io/cyprus-college-portal/login.html">
+  <meta property="og:title" content="Sign In | Cyprus College Group Portal">
+  <meta property="og:description" content="Access the Ledra College academic portal — grades, timetable, fees, and more.">
+  <meta property="og:image" content="https://kabod1.github.io/cyprus-college-portal/icons/social-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kabod1.github.io/cyprus-college-portal/icons/social-card.png">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -399,6 +421,25 @@
       <i class="fas fa-arrow-left"></i> Back to public website
     </a>
 
+    <p style="font-size:11px;color:#94a3b8;text-align:center;margin-top:20px;line-height:1.6">
+      By signing in you agree to our
+      <a href="terms.html" style="color:#64748b;text-decoration:underline">Terms of Use</a> and
+      <a href="privacy.html" style="color:#64748b;text-decoration:underline">Privacy Policy</a>.
+    </p>
+
+  </div>
+</div>
+
+<!-- GDPR Cookie Banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f2347;border-top:3px solid #c9a227;padding:16px 20px;box-shadow:0 -4px 24px rgba(0,0,0,.3)">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <p style="flex:1;min-width:220px;color:#fff;font-size:13px;margin:0;line-height:1.6">
+      <strong style="color:#c9a227">Cookie Notice:</strong> We use local storage for authentication. See our <a href="privacy.html" style="color:#c9a227;text-decoration:underline">Privacy Policy</a>.
+    </p>
+    <div style="display:flex;gap:8px">
+      <button onclick="declineCookies()" style="padding:8px 16px;border-radius:7px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.7);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Decline</button>
+      <button onclick="acceptCookies()" style="padding:8px 20px;border-radius:7px;border:none;background:#c9a227;color:#0f2347;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Accept</button>
+    </div>
   </div>
 </div>
 
@@ -511,6 +552,14 @@
       }
     } catch {}
   }
+
+  // Cookie consent
+  function acceptCookies(){localStorage.setItem('ccg_cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}
+  function declineCookies(){localStorage.setItem('ccg_cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}
+  if(!localStorage.getItem('ccg_cookie_consent')){document.getElementById('cookie-banner').style.display='block';}
+
+  // Service Worker
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('/cyprus-college-portal/sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
