@@ -271,6 +271,28 @@
     .assign-meta{font-size:12px;color:var(--muted);margin-top:2px;}
     .assign-due{font-size:12px;font-weight:700;}
 
+    /* Page load overlay — prevents layout flash/twitching */
+    #page-loader{
+      position:fixed;inset:0;z-index:9999;
+      background:var(--dark);
+      display:flex;align-items:center;justify-content:center;
+      flex-direction:column;gap:16px;
+      transition:opacity .35s ease;
+    }
+    #page-loader.fade-out{opacity:0;pointer-events:none;}
+    .loader-logo{
+      width:52px;height:52px;border-radius:14px;
+      background:linear-gradient(135deg,var(--gold),#f0d06a);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);
+    }
+    .loader-spinner{
+      width:28px;height:28px;border:3px solid rgba(255,255,255,.15);
+      border-top-color:var(--gold);border-radius:50%;
+      animation:spin .7s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
     .menu-btn{
       display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;
       width:36px;height:36px;background:var(--bg);border:1px solid var(--border);
@@ -299,6 +321,12 @@
   </style>
 </head>
 <body>
+
+<!-- PAGE LOADER -->
+<div id="page-loader">
+  <div class="loader-logo">CCG</div>
+  <div class="loader-spinner"></div>
+</div>
 
 <!-- TOAST -->
 <div class="toast-wrap" id="toasts"></div>
@@ -773,6 +801,11 @@ async function init(){
   await loadDashboard();
   loadNotifications();
   setupProfile();
+
+  // Hide loader once everything is ready
+  const loader = document.getElementById('page-loader');
+  loader.classList.add('fade-out');
+  setTimeout(() => loader.style.display = 'none', 380);
 }
 
 async function loadDashboard(){
@@ -1262,7 +1295,13 @@ async function changePassword(){
 }
 
 init();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/cyprus-college-portal/sw.js').catch(()=>{});}
+if('serviceWorker' in navigator){
+  // Unregister any stale service workers first, then register fresh
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+    navigator.serviceWorker.register('/cyprus-college-portal/sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance | Cyprus College Group</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f2347">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inter',sans-serif;
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#0a1838 0%,#1a3a6b 60%,#0f2347 100%);
+      padding:24px;
+    }
+    .card{
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;padding:56px 48px;max-width:520px;width:100%;
+      text-align:center;backdrop-filter:blur(12px);
+    }
+    .logo{
+      width:72px;height:72px;border-radius:18px;
+      background:linear-gradient(135deg,#c9a227,#f0d06a);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:28px;font-weight:700;
+      color:#0f2347;margin:0 auto 28px;
+    }
+    .icon{font-size:48px;margin-bottom:20px;display:block;}
+    h1{
+      font-family:'Playfair Display',serif;font-size:32px;
+      color:#fff;margin-bottom:16px;line-height:1.2;
+    }
+    h1 span{color:#c9a227;}
+    p{font-size:16px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:12px;}
+    .eta{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.3);
+      color:#c9a227;padding:8px 20px;border-radius:20px;
+      font-size:13px;font-weight:600;margin:20px 0;
+    }
+    .contact{margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);}
+    .contact p{font-size:14px;color:rgba(255,255,255,.45);margin:0;}
+    .contact a{color:#c9a227;text-decoration:none;font-weight:600;}
+    @media(max-width:480px){.card{padding:36px 24px;}h1{font-size:26px;}}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">CCG</div>
+  <span class="icon">🔧</span>
+  <h1>Scheduled <span>Maintenance</span></h1>
+  <p id="main-msg">We're currently performing scheduled maintenance. We'll be back shortly.</p>
+  <div class="eta" id="eta-block" style="display:none">
+    <i class="fas fa-clock"></i>
+    <span id="eta-text"></span>
+  </div>
+  <p>Thank you for your patience.</p>
+  <div class="contact">
+    <p>Urgent queries: <a href="mailto:info@ledra.ac.cy">info@ledra.ac.cy</a> &nbsp;·&nbsp; <a href="tel:+35722123456">+357 22 123 456</a></p>
+  </div>
+</div>
+<script>
+  // Load message from config
+  fetch('config.json').then(r=>r.json()).then(cfg=>{
+    if(cfg.maintenance_message) document.getElementById('main-msg').textContent = cfg.maintenance_message;
+    if(cfg.maintenance_eta){
+      document.getElementById('eta-text').textContent = 'Expected back: ' + cfg.maintenance_eta;
+      document.getElementById('eta-block').style.display = 'inline-flex';
+    }
+    // If maintenance is off, redirect home
+    if(!cfg.maintenance) window.location.href = 'index.html';
+  }).catch(()=>{});
+</script>
+</body>
+</html>

@@ -553,6 +553,13 @@
     } catch {}
   }
 
+  // Maintenance check
+  fetch('../config.json?t='+Date.now()).then(r=>r.json()).then(cfg=>{
+    if(cfg.maintenance) window.location.href='../maintenance.html';
+  }).catch(()=>fetch('config.json?t='+Date.now()).then(r=>r.json()).then(cfg=>{
+    if(cfg.maintenance) window.location.href='maintenance.html';
+  }).catch(()=>{}));
+
   // Cookie consent
   function acceptCookies(){localStorage.setItem('ccg_cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}
   function declineCookies(){localStorage.setItem('ccg_cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}
