@@ -1,4 +1,4 @@
-const CACHE = 'ccg-portal-v1';
+const CACHE = 'ccg-portal-v2';
 const BASE = '/cyprus-college-portal';
 
 const PRECACHE = [
@@ -14,21 +14,19 @@ const PRECACHE = [
   BASE + '/icons/icon-512.png',
 ];
 
-// Install — pre-cache shell assets
+// Install — pre-cache shell assets (no skipWaiting to avoid forced page reload)
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(c => c.addAll(PRECACHE))
   );
 });
 
-// Activate — clean old caches
+// Activate — clean old caches (no clients.claim to avoid tab twitching)
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    )
   );
 });
 
